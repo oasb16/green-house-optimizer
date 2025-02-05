@@ -19,7 +19,7 @@ def fetch_sensor_data():
     try:
         response = requests.get(ESP32_URL, timeout=5)
         response.raise_for_status()
-
+        print(response.text)
         # Parse the HTML response
         soup = BeautifulSoup(response.text, "html.parser")
 
