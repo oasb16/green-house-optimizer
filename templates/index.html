@@ -6,11 +6,23 @@
     <title>ESP32 Sensor Data</title>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
     <h1>ESP32 Sensor Data</h1>
-    <p>Temperature: <span id="tempData">Loading...</span></p>
-    <p>Humidity: <span id="humData">Loading...</span></p>
-    <p>Light: <span id="lightData">Loading...</span></p>
-    <p>Soil Moisture: <span id="moistureData">Loading...</span></p>
+
+    <div class="card">
+        <p>Temperature: <span id="tempData">Loading...</span></p>
+        <p>Humidity: <span id="humData">Loading...</span></p>
+        <p>Light: <span id="lightData">Loading...</span></p>
+        <p>Soil Moisture: <span id="moistureData">Loading...</span></p>
+    </div>
+
+    <div class="card">
+        <h3 id="ngrokURL">Fetching Ngrok URL...</h3>
+    </div>
+
+    <div class="form-container">
+        <button id="sendSSID">Set WiFi Credentials</button>
+    </div>
 </body>
 </html>
