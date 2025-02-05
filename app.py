@@ -1,51 +1,50 @@
 import os
 import logging
-from threading import Lock
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
+import requests
+from flask import Flask, render_template, request, jsonify
 
-# Configure logging
+# Logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Flask app setup
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "supersecretkey")
 
-socketio = SocketIO(app, cors_allowed_origins="*")  # Allow cross-origin WebSocket connections
+# External API IP address to fetch data
+EXTERNAL_API = "http://10.0.0.0:72:80"  # Replace with the actual API address
 
-data_store = []
-data_lock = Lock()
-
-@app.route('/')
+@app.route("/")
 def index():
+    """Render the main HTML page."""
     return render_template("index.html")
 
-@app.route('/data')
-def display_data():
-    """Displays the received JSON data in an HTML table."""
-    with data_lock:
-        data_list = list(enumerate(data_store))
-    return render_template("/templates/data.html", data=data_list)
+@app.route("/get-data", methods=["GET"])
+def get_data():
+    """Fetches data from the external IP address and returns it."""
+    try:
+        response = requests.get(EXTERNAL_API, timeout=5)  # Fetch data from external API
+        response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+        data = response.json()
+        logger.info(f"✅ Data fetched: {data}")
+        return jsonify({"value": data.get("value", "No data received")}), 200
+    except requests.exceptions.RequestException as e:
+        logger.error(f"❌ Error fetching data: {e}")
+        return jsonify({"status": "error", "message": "Failed to fetch data"}), 500
 
-@socketio.on('connect')
-def handle_connect():
-    logger.info("Client connected: %s", request.sid)
-    emit('response', {'message': 'Connected to server'})
+@app.route("/post-data", methods=["POST"])
+def post_data():
+    """Handles sending data to an external API for future use."""
+    try:
+        payload = request.json
+        response = requests.post(EXTERNAL_API, json=payload, timeout=5)
+        response.raise_for_status()
+        return jsonify({"status": "success", "response": response.text}), 200
+    except requests.exceptions.RequestException as e:
+        logger.error(f"❌ Error posting data: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    logger.info("Client disconnected: %s", request.sid)
-
-@socketio.on('json_data')
-def handle_json_data(json_payload):
-    """Handles incoming JSON data from WebSocket."""
-    logger.info("Received JSON data: %s", json_payload)
-    with data_lock:
-        data_store.append(json_payload)
-    emit('response', {'message': 'Data received'}, broadcast=False)
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    logger.info("Starting Flask WebSocket app on port %d", port)
-    socketio.run(app, host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    logger.info(f"🚀 Starting Flask app on port {port}")
+    app.run(host="0.0.0.0", port=port)
