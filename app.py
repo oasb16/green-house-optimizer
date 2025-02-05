@@ -26,7 +26,7 @@ def display_data():
     """Displays the received JSON data in an HTML table."""
     with data_lock:
         data_list = list(enumerate(data_store))
-    return render_template("data.html", data=data_list)
+    return render_template("/templates/data.html", data=data_list)
 
 @socketio.on('connect')
 def handle_connect():
