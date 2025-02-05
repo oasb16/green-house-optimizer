@@ -1,17 +1,42 @@
 import os
 import logging
 import requests
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify
+from bs4 import BeautifulSoup  # For parsing ESP32 HTML response
 
+# Logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Flask app setup
 app = Flask(__name__)
 
-EXTERNAL_API = "http://10.0.0.72"  # External API
+# ESP32 Sensor Server URL
+ESP32_URL = "http://10.0.0.72"
 
-# Cached data to prevent crashes
-cached_data = {"value": "No data yet"}
+def fetch_sensor_data():
+    """Fetch sensor data from ESP32 and extract temperature, humidity, light, and soil moisture."""
+    try:
+        response = requests.get(ESP32_URL, timeout=5)
+        response.raise_for_status()
+
+        # Parse the HTML response
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Extract sensor values
+        sensor_data = {
+            "temperature": soup.find(text="Temperature:").find_next().text.split(" ")[0],
+            "humidity": soup.find(text="Humidity:").find_next().text.split(" ")[0],
+            "light": soup.find(text="Light:").find_next().text.split(" ")[0],
+            "soil_moisture": soup.find(text="Soil Moisture:").find_next().text.split(" ")[0],
+        }
+        
+        logger.info(f"✅ Fetched sensor data: {sensor_data}")
+        return sensor_data
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"❌ Error fetching ESP32 data: {e}")
+        return {"error": "Failed to retrieve data"}
 
 @app.route("/")
 def index():
@@ -19,35 +44,8 @@ def index():
 
 @app.route("/get-data", methods=["GET"])
 def get_data():
-    """Fetch data from external API but fallback if unavailable."""
-    global cached_data
-    try:
-        response = requests.get(EXTERNAL_API, timeout=5)
-        response.raise_for_status()
-        data = response.json()
-        cached_data = {"value": data.get("value", "No data received")}
-        logger.info(f"✅ Data fetched: {cached_data}")
-    except requests.exceptions.RequestException as e:
-        logger.error(f"❌ Error fetching data, returning cached: {e}")
-    return jsonify(cached_data), 200
+    """Fetch sensor data from ESP32 and return it as JSON."""
+    return jsonify(fetch_sensor_data())
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
-@app.route("/post-data", methods=["POST"])
-def post_data():
-    """Handles sending data to an external API for future use."""
-    try:
-        payload = request.json
-        response = requests.post(EXTERNAL_API, json=payload, timeout=5)
-        response.raise_for_status()
-        return jsonify({"status": "success", "response": response.text}), 200
-    except requests.exceptions.RequestException as e:
-        logger.error(f"❌ Error posting data: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    logger.info(f"🚀 Starting Flask app on port {port}")
-    app.run(host="0.0.0.0", port=port)
