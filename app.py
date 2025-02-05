@@ -1,6 +1,7 @@
 import os
 import logging
 import requests
+import re
 from flask import Flask, render_template, jsonify
 from bs4 import BeautifulSoup
 
@@ -15,19 +16,22 @@ app = Flask(__name__)
 ESP32_URL = "https://63e8-2601-645-4500-9d0-59ca-7ccc-9141-75fc.ngrok-free.app/"
 
 def fetch_sensor_data():
-    """Fetch sensor data from the ESP32 (via Ngrok) and extract values."""
+    """Fetch sensor data from ESP32 and extract values robustly using regex."""
     try:
         response = requests.get(ESP32_URL, timeout=5)
         response.raise_for_status()
-        print(response.text)
+
         # Parse the HTML response
         soup = BeautifulSoup(response.text, "html.parser")
 
+        # Extract sensor values using regex
+        data_text = soup.get_text()
+
         sensor_data = {
-            "temperature": soup.find(text="Temperature:").find_next().text.split(" ")[0],
-            "humidity": soup.find(text="Humidity:").find_next().text.split(" ")[0],
-            "light": soup.find(text="Light:").find_next().text.split(" ")[0],
-            "soil_moisture": soup.find(text="Soil Moisture:").find_next().text.split(" ")[0],
+            "temperature": re.search(r"Temperature:\s*([\d.]+)", data_text).group(1) if re.search(r"Temperature:\s*([\d.]+)", data_text) else "N/A",
+            "humidity": re.search(r"Humidity:\s*([\d.]+)", data_text).group(1) if re.search(r"Humidity:\s*([\d.]+)", data_text) else "N/A",
+            "light": re.search(r"Light:\s*([\d.]+)", data_text).group(1) if re.search(r"Light:\s*([\d.]+)", data_text) else "N/A",
+            "soil_moisture": re.search(r"Soil Moisture:\s*([\d.]+)", data_text).group(1) if re.search(r"Soil Moisture:\s*([\d.]+)", data_text) else "N/A",
         }
         
         logger.info(f"✅ Fetched sensor data: {sensor_data}")
@@ -36,6 +40,9 @@ def fetch_sensor_data():
     except requests.exceptions.RequestException as e:
         logger.error(f"❌ Error fetching ESP32 data: {e}")
         return {"error": "Failed to retrieve data"}
+    except Exception as e:
+        logger.error(f"❌ Parsing error: {e}")
+        return {"error": "Failed to parse data"}
 
 @app.route("/")
 def index():
