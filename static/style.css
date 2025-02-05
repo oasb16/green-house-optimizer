@@ -35,15 +35,15 @@ body {
 }
 
 #humData {
-    color: #3498DB; /* Blue for humidity */
+    color: #E74C3C; /* Blue for humidity */
 }
 
 #lightData {
-    color: #F1C40F; /* Yellow for light */
+    color: #E74C3C; /* Yellow for light */
 }
 
 #moistureData {
-    color: #2ECC71; /* Green for soil moisture */
+    color: #E74C3C; /* Green for soil moisture */
 }
 
 /* Input Form */
