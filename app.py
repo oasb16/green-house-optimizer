@@ -2,7 +2,7 @@ import os
 import logging
 import requests
 from flask import Flask, render_template, jsonify
-from bs4 import BeautifulSoup  # For parsing ESP32 HTML response
+from bs4 import BeautifulSoup
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -19,18 +19,14 @@ def fetch_sensor_data():
     try:
         response = requests.get(ESP32_URL, timeout=5)
         response.raise_for_status()
-
-        # Parse the HTML response
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # Extract sensor values
         sensor_data = {
             "temperature": soup.find(text="Temperature:").find_next().text.split(" ")[0],
             "humidity": soup.find(text="Humidity:").find_next().text.split(" ")[0],
             "light": soup.find(text="Light:").find_next().text.split(" ")[0],
             "soil_moisture": soup.find(text="Soil Moisture:").find_next().text.split(" ")[0],
         }
-        
         logger.info(f"✅ Fetched sensor data: {sensor_data}")
         return sensor_data
 
@@ -44,8 +40,8 @@ def index():
 
 @app.route("/get-data", methods=["GET"])
 def get_data():
-    """Fetch sensor data from ESP32 and return it as JSON."""
     return jsonify(fetch_sensor_data())
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
