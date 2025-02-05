@@ -11,14 +11,16 @@ logger = logging.getLogger(__name__)
 # Flask app setup
 app = Flask(__name__)
 
-# ESP32 Sensor Server URL
-ESP32_URL = "http://10.0.0.72"
+# Use the Ngrok URL instead of the local IP
+ESP32_URL = "https://63e8-2601-645-4500-9d0-59ca-7ccc-9141-75fc.ngrok-free.app/"
 
 def fetch_sensor_data():
-    """Fetch sensor data from ESP32 and extract temperature, humidity, light, and soil moisture."""
+    """Fetch sensor data from the ESP32 (via Ngrok) and extract values."""
     try:
         response = requests.get(ESP32_URL, timeout=5)
         response.raise_for_status()
+
+        # Parse the HTML response
         soup = BeautifulSoup(response.text, "html.parser")
 
         sensor_data = {
@@ -27,6 +29,7 @@ def fetch_sensor_data():
             "light": soup.find(text="Light:").find_next().text.split(" ")[0],
             "soil_moisture": soup.find(text="Soil Moisture:").find_next().text.split(" ")[0],
         }
+        
         logger.info(f"✅ Fetched sensor data: {sensor_data}")
         return sensor_data
 
@@ -40,6 +43,7 @@ def index():
 
 @app.route("/get-data", methods=["GET"])
 def get_data():
+    """Fetch sensor data from ESP32 and return it as JSON."""
     return jsonify(fetch_sensor_data())
 
 if __name__ == "__main__":
