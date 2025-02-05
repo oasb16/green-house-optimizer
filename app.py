@@ -44,6 +44,7 @@ def fetch_sensor_data():
         logger.error(f"❌ Parsing error: {e}")
         return {"error": "Failed to parse data"}
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -52,6 +53,24 @@ def index():
 def get_data():
     """Fetch sensor data from ESP32 and return it as JSON."""
     return jsonify(fetch_sensor_data())
+
+@app.route("/send-data", methods=["POST"])
+def send_data():
+    """Send SSID & Password to ESP32."""
+    try:
+        payload = request.json  # JSON data received from frontend
+        logger.info(f"Sending SSID & Password to ESP32: {payload}")
+
+        # Send POST request to ESP32
+        response = requests.post(ESP32_URL + "set", json=payload, timeout=5)
+        response.raise_for_status()  # Raises error for HTTP failures
+
+        return jsonify({"status": "success", "response": response.text}), 200
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"❌ Error sending data to ESP32: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

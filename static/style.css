@@ -1,4 +1,3 @@
-/* General Styling */
 body {
     font-family: 'Arial', sans-serif;
     background: #f4f4f4;
@@ -7,57 +6,22 @@ body {
     padding: 20px;
 }
 
-/* Card Container */
-.card {
+h1 {
+    color: #222;
+}
+
+.sensor-container {
     background: white;
+    padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 50%;
-    margin: 20px auto;
-    transition: transform 0.2s ease-in-out;
+    display: inline-block;
+    margin: 20px;
 }
 
-.card:hover {
-    transform: scale(1.02);
-}
-
-/* Sensor Data Styling */
-.sensor-data {
-    font-size: 22px;
-    margin: 10px 0;
+p {
+    font-size: 18px;
     font-weight: bold;
-}
-
-/* Colored Sensor Values */
-#tempData {
-    color: #E74C3C; /* Red for temperature */
-}
-
-#humData {
-    color: #E74C3C; /* Blue for humidity */
-}
-
-#lightData {
-    color: #E74C3C; /* Yellow for light */
-}
-
-#moistureData {
-    color: #E74C3C; /* Green for soil moisture */
-}
-
-/* Input Form */
-.form-container {
-    margin-top: 20px;
-}
-
-input[type="text"] {
-    padding: 8px;
-    width: 150px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    font-size: 16px;
 }
 
 button {
@@ -68,20 +32,10 @@ button {
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
+    margin-top: 20px;
     transition: background 0.3s;
 }
 
 button:hover {
     background: #0056b3;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .card {
-        width: 80%;
-    }
-
-    input[type="text"] {
-        width: 120px;
-    }
 }

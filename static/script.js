@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
+    let userSSID = prompt("Enter your Wi-Fi SSID:");
+    if (userSSID) {
+        sendSSID(userSSID);
+    }
+
+
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -12,9 +18,32 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
-    // Fetch new data every 2 seconds
-    setInterval(fetchData, 2000);
+    function sendSSID(ssid) {
+        fetch("/send-data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ssid: ssid })
+        })
+        .then(response => response.json())
+        .then(data => console.log("✅ SSID sent:", data))
+        .catch(error => console.error("❌ Error sending SSID:", error));
+    }
 
-    // Initial fetch
+    document.getElementById("sendPassword").addEventListener("click", function () {
+        let userPassword = prompt("Enter your Wi-Fi Password:");
+        if (userPassword) {
+            fetch("/send-data", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: userPassword })
+            })
+            .then(response => response.json())
+            .then(data => console.log("✅ Password sent:", data))
+            .catch(error => console.error("❌ Error sending Password:", error));
+        }
+    });
+
+    setInterval(fetchData, 2000);
     fetchData();
 });
+
