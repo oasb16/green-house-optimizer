@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-EXTERNAL_API = "http://10.0.0.72:80"  # External API
+EXTERNAL_API = "http://10.0.0.72"  # External API
 
 # Cached data to prevent crashes
 cached_data = {"value": "No data yet"}
