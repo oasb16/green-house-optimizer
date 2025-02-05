@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: ./ngrok http 5000 && gunicorn app:app
