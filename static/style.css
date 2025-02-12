@@ -35,23 +35,31 @@ body {
 }
 
 #humData {
-    color: #3498DB; /* Blue for humidity */
+    color: #E74C3C; /* Blue for humidity */
 }
 
 #lightData {
-    color: #F1C40F; /* Yellow for light */
+    color: #E74C3C; /* Yellow for light */
 }
 
 #moistureData {
-    color: #2ECC71; /* Green for soil moisture */
+    color: #E74C3C; /* Green for soil moisture */
 }
 
-/* Form Container */
+/* Input Form */
 .form-container {
     margin-top: 20px;
 }
 
-/* Button Styling */
+input[type="text"] {
+    padding: 8px;
+    width: 150px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
 button {
     background: #007BFF;
     color: white;
@@ -71,5 +79,9 @@ button:hover {
 @media (max-width: 768px) {
     .card {
         width: 80%;
+    }
+
+    input[type="text"] {
+        width: 120px;
     }
 }
