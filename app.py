@@ -46,6 +46,7 @@ def fetch_sensor_data():
         return {"error": "Failed to parse data"}
 
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
