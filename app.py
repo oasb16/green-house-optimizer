@@ -82,8 +82,6 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)
-        print("❌❌❌❌"+str(data)+"❌❌❌❌")
-        logger.error("❌❌❌❌"+str(data)+"❌❌❌❌")
         latest_sensor_data.update(data)  # Update sensor values
         logger.info(f"📩 MQTT Message received on topic `{msg.topic}`: {data}")
     except json.JSONDecodeError as e:
@@ -127,8 +125,6 @@ def index():
 def get_data():
     """Return the latest sensor data received via MQTT."""
     logger.info("📡 API Request: GET /get-data")
-    print("❌❌❌❌"+str(latest_sensor_data)+"❌❌❌❌")
-    logger.error("❌❌❌❌"+str(latest_sensor_data)+"❌❌❌❌")
     return jsonify(latest_sensor_data)
 
 if __name__ == "__main__":
