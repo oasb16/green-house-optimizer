@@ -24,6 +24,7 @@ MQTT_PORT = 8883
 AWS_IOT_TOPIC = "esp32/sensorData"
 # MQTT_PORT = 8883
 
+
 # Store latest sensor data
 latest_sensor_data = {
     "temperature": "N/A",
