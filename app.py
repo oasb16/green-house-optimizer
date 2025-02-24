@@ -126,6 +126,8 @@ def index():
 def get_data():
     """Return the latest sensor data received via MQTT."""
     logger.info("📡 API Request: GET /get-data")
+    print("❌❌❌❌"+str(latest_sensor_data)+"❌❌❌❌")
+    logger.error("❌❌❌❌"+str(latest_sensor_data)+"❌❌❌❌")
     return jsonify(latest_sensor_data)
 
 if __name__ == "__main__":
