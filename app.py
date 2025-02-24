@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 # AWS IoT Configuration
 AWS_IOT_ENDPOINT = "wss://a2e8a4czugwpbb-ats.iot.us-west-1.amazonaws.com/mqtt"
-MQTT_PORT = 443
+MQTT_PORT = 8883
 AWS_IOT_TOPIC = "esp32/sensorData"
 # MQTT_PORT = 8883
 
