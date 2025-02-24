@@ -81,7 +81,8 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)
-        print(str(data))
+        print("❌❌❌❌"+str(data)"❌❌❌❌"+)
+        logger.error("❌❌❌❌"+str(data)"❌❌❌❌"+)
         latest_sensor_data.update(data)  # Update sensor values
         logger.info(f"📩 MQTT Message received on topic `{msg.topic}`: {data}")
     except json.JSONDecodeError as e:
