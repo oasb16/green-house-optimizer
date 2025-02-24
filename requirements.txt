@@ -4,4 +4,3 @@ beautifulsoup4
 gunicorn
 ngrok
 paho-mqtt  # For MQTT client to subscribe to AWS IoT
-ssl         # For secure AWS IoT connection
