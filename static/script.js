@@ -1,114 +1,60 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const buttonStateLog = document.getElementById("buttonStateLog");
-    const sensorData = {
-        temperature: [],
-        humidity: [],
-        light: [],
-        soil_moisture: [],
-        timestamps: []
-    };
+    const buttonLog = document.getElementById("buttonLog");
 
-    // Initialize charts
     const ctxTemp = document.getElementById("chartTemp").getContext("2d");
     const ctxHum = document.getElementById("chartHum").getContext("2d");
     const ctxLight = document.getElementById("chartLight").getContext("2d");
     const ctxMoisture = document.getElementById("chartMoisture").getContext("2d");
 
-    // Ensure Chart.js uses moment adapter for time formatting
-    Chart.register(window.ChartjsAdapterMoment);
+    const chartOptions = {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: '', data: [], borderColor: 'blue', fill: false }] },
+        options: { scales: { x: { type: 'time', time: { unit: 'second' } } } }
+    };
 
-    const chartConfig = (ctx, label, color) => new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: [],
-            datasets: [{
-                label: label,
-                data: [],
-                borderColor: color,
-                borderWidth: 2,
-                fill: false,
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: { type: "time", time: { unit: "minute" } },
-                y: { beginAtZero: true }
-            }
-        }
-    });
-
-    const tempChart = chartConfig(ctxTemp, "Temperature (°C)", "red");
-    const humChart = chartConfig(ctxHum, "Humidity (%)", "blue");
-    const lightChart = chartConfig(ctxLight, "Light (lx)", "yellow");
-    const moistureChart = chartConfig(ctxMoisture, "Soil Moisture", "green");
-
-    function updateCharts() {
-        tempChart.data.labels = sensorData.timestamps;
-        tempChart.data.datasets[0].data = sensorData.temperature;
-        tempChart.update();
-
-        humChart.data.labels = sensorData.timestamps;
-        humChart.data.datasets[0].data = sensorData.humidity;
-        humChart.update();
-
-        lightChart.data.labels = sensorData.timestamps;
-        lightChart.data.datasets[0].data = sensorData.light;
-        lightChart.update();
-
-        moistureChart.data.labels = sensorData.timestamps;
-        moistureChart.data.datasets[0].data = sensorData.soil_moisture;
-        moistureChart.update();
-    }
+    const tempChart = new Chart(ctxTemp, { ...chartOptions, data: { labels: [], datasets: [{ label: "Temperature", data: [] }] }});
+    const humChart = new Chart(ctxHum, { ...chartOptions, data: { labels: [], datasets: [{ label: "Humidity", data: [] }] }});
+    const lightChart = new Chart(ctxLight, { ...chartOptions, data: { labels: [], datasets: [{ label: "Light", data: [] }] }});
+    const moistureChart = new Chart(ctxMoisture, { ...chartOptions, data: { labels: [], datasets: [{ label: "Soil Moisture", data: [] }] }});
 
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
             .then(data => {
-                console.log("🔄 Updating UI with new values:", data);
-                
-                const timestamp = new Date().toISOString();
+                document.getElementById("tempData").textContent = `${data.sensor_data.temperature} °C`;
+                document.getElementById("humData").textContent = `${data.sensor_data.humidity} %`;
+                document.getElementById("lightData").textContent = `${data.sensor_data.light} lx`;
+                document.getElementById("moistureData").textContent = `${data.sensor_data.soil_moisture} %`;
 
-                document.getElementById("tempData").textContent = data.temperature + " °C";
-                document.getElementById("humData").textContent = data.humidity + " %";
-                document.getElementById("lightData").textContent = data.light + " lx";
-                document.getElementById("moistureData").textContent = data.soil_moisture + " %";
+                buttonLog.innerHTML = data.button_logs.map(log => `<tr><td>${log.command}</td><td>${log.timestamp}</td></tr>`).join("");
 
-                sensorData.temperature.push({ x: timestamp, y: data.temperature });
-                sensorData.humidity.push({ x: timestamp, y: data.humidity });
-                sensorData.light.push({ x: timestamp, y: data.light });
-                sensorData.soil_moisture.push({ x: timestamp, y: data.soil_moisture });
-                sensorData.timestamps.push(timestamp);
+                let timestamp = new Date(data.sensor_data.timestamp);
+                tempChart.data.labels.push(timestamp);
+                tempChart.data.datasets[0].data.push(data.sensor_data.temperature);
+                tempChart.update();
 
-                if (sensorData.temperature.length > 20) {
-                    Object.keys(sensorData).forEach(key => sensorData[key].shift());
-                }
+                humChart.data.labels.push(timestamp);
+                humChart.data.datasets[0].data.push(data.sensor_data.humidity);
+                humChart.update();
 
-                updateCharts();
+                lightChart.data.labels.push(timestamp);
+                lightChart.data.datasets[0].data.push(data.sensor_data.light);
+                lightChart.update();
+
+                moistureChart.data.labels.push(timestamp);
+                moistureChart.data.datasets[0].data.push(data.sensor_data.soil_moisture);
+                moistureChart.update();
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
+    ["autoMode", "manual", "button1", "button2", "button3"].forEach(id => {
+        document.getElementById(id).addEventListener("click", () => sendCommand(id));
+    });
+
     function sendCommand(command) {
-        fetch("/send-command", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ command: command })
-        })
-        .then(response => response.json())
-        .then(data => {
-            const timestamp = new Date().toLocaleTimeString();
-            buttonStateLog.innerHTML += `<tr><td>${command}</td><td>${timestamp}</td></tr>`;
-        })
-        .catch(error => console.error("Error:", error));
+        fetch("/send-command", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ command }) });
     }
 
-    document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
-    document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
-    document.getElementById("button1").addEventListener("click", () => sendCommand("Button 1"));
-    document.getElementById("button2").addEventListener("click", () => sendCommand("Button 2"));
-    document.getElementById("button3").addEventListener("click", () => sendCommand("Button 3"));
-
     setInterval(fetchData, 2000);
-    fetchData();
 });
