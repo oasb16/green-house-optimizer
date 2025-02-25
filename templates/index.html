@@ -1,57 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Sensor Data</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 Sensor Data & Control Panel</title>
+  <!-- Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Our custom script (which now handles charts and button logs) -->
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>ESP32 Sensor Data</h1>
-
-    <div class="dashboard">
-        <div class="sensor-container">
-            <div class="card">
-                <p class="sensor-data">Temperature: <span id="tempData">Loading...</span></p>
-                <p class="sensor-data">Humidity: <span id="humData">Loading...</span></p>
-                <p class="sensor-data">Light: <span id="lightData">Loading...</span></p>
-                <p class="sensor-data">Soil Moisture: <span id="moistureData">Loading...</span></p>
-            </div>
-        </div>
-
-        <div class="button-log">
-            <h2>Button State Log</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Button</th>
-                        <th>State</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody id="buttonLog">
-                    <tr><td colspan="3">Waiting for button presses...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="form-container">
+  <h1>ESP32 Sensor Data & Control Panel</h1>
+  
+  <!-- Two-column container: Left for sensor card and control buttons; Right for button log -->
+  <div class="container">
+    <div class="left-panel">
+      <div class="card">
+        <p class="sensor-data">Temperature: <span id="tempData">Loading...</span></p>
+        <p class="sensor-data">Humidity: <span id="humData">Loading...</span></p>
+        <p class="sensor-data">Light: <span id="lightData">Loading...</span></p>
+        <p class="sensor-data">Soil Moisture: <span id="moistureData">Loading...</span></p>
+      </div>
+      <div class="form-container">
         <h2>Control Panel</h2>
         <button id="autoMode">Auto Mode</button>
         <button id="manual">Manual</button>
         <button id="button1">Button 1</button>
         <button id="button2">Button 2</button>
         <button id="button3">Button 3</button>
+      </div>
     </div>
-
-    <div class="charts-container">
-        <canvas id="tempChart"></canvas>
-        <canvas id="humChart"></canvas>
-        <canvas id="lightChart"></canvas>
-        <canvas id="moistureChart"></canvas>
+    <div class="right-panel">
+      <h2>Button Press Log</h2>
+      <table id="buttonLog">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Button log entries will be appended here -->
+        </tbody>
+      </table>
     </div>
+  </div>
+  
+  <!-- 2x2 Grid for Live Sensor Graphs -->
+  <div class="charts-container">
+    <h2>Real-Time Sensor Graphs</h2>
+    <div class="chart-grid">
+      <canvas id="tempChart"></canvas>
+      <canvas id="humChart"></canvas>
+      <canvas id="lightChart"></canvas>
+      <canvas id="moistureChart"></canvas>
+    </div>
+  </div>
 </body>
 </html>

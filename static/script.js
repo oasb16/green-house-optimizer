@@ -1,55 +1,104 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const maxDataPoints = 20;
-
-    // Track button states
-    let buttonStates = {
-        "Auto Mode": "OFF",
-        "Manual": "OFF",
-        "Button 1": "OFF",
-        "Button 2": "OFF",
-        "Button 3": "OFF"
+    const buttonStateLog = document.getElementById("buttonStateLog");
+    const sensorData = {
+        temperature: [],
+        humidity: [],
+        light: [],
+        soil_moisture: [],
+        timestamps: []
     };
 
     // Initialize charts
-    const tempChart = createChart("tempChart", "Temperature (°C)", "red");
-    const humChart = createChart("humChart", "Humidity (%)", "blue");
-    const lightChart = createChart("lightChart", "Light (lx)", "yellow");
-    const moistureChart = createChart("moistureChart", "Soil Moisture", "green");
+    const ctxTemp = document.getElementById("chartTemp").getContext("2d");
+    const ctxHum = document.getElementById("chartHum").getContext("2d");
+    const ctxLight = document.getElementById("chartLight").getContext("2d");
+    const ctxMoisture = document.getElementById("chartMoisture").getContext("2d");
+
+    // Ensure Chart.js uses moment adapter for time formatting
+    Chart.register(window.ChartjsAdapterMoment);
+
+    const chartConfig = (ctx, label, color) => new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                label: label,
+                data: [],
+                borderColor: color,
+                borderWidth: 2,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { type: "time", time: { unit: "minute" } },
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    const tempChart = chartConfig(ctxTemp, "Temperature (°C)", "red");
+    const humChart = chartConfig(ctxHum, "Humidity (%)", "blue");
+    const lightChart = chartConfig(ctxLight, "Light (lx)", "yellow");
+    const moistureChart = chartConfig(ctxMoisture, "Soil Moisture", "green");
+
+    function updateCharts() {
+        tempChart.data.labels = sensorData.timestamps;
+        tempChart.data.datasets[0].data = sensorData.temperature;
+        tempChart.update();
+
+        humChart.data.labels = sensorData.timestamps;
+        humChart.data.datasets[0].data = sensorData.humidity;
+        humChart.update();
+
+        lightChart.data.labels = sensorData.timestamps;
+        lightChart.data.datasets[0].data = sensorData.light;
+        lightChart.update();
+
+        moistureChart.data.labels = sensorData.timestamps;
+        moistureChart.data.datasets[0].data = sensorData.soil_moisture;
+        moistureChart.update();
+    }
 
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
             .then(data => {
                 console.log("🔄 Updating UI with new values:", data);
+                
+                const timestamp = new Date().toISOString();
+
                 document.getElementById("tempData").textContent = data.temperature + " °C";
                 document.getElementById("humData").textContent = data.humidity + " %";
                 document.getElementById("lightData").textContent = data.light + " lx";
                 document.getElementById("moistureData").textContent = data.soil_moisture + " %";
 
-                updateChart(tempChart, data.timestamp, data.temperature);
-                updateChart(humChart, data.timestamp, data.humidity);
-                updateChart(lightChart, data.timestamp, data.light);
-                updateChart(moistureChart, data.timestamp, data.soil_moisture);
+                sensorData.temperature.push({ x: timestamp, y: data.temperature });
+                sensorData.humidity.push({ x: timestamp, y: data.humidity });
+                sensorData.light.push({ x: timestamp, y: data.light });
+                sensorData.soil_moisture.push({ x: timestamp, y: data.soil_moisture });
+                sensorData.timestamps.push(timestamp);
+
+                if (sensorData.temperature.length > 20) {
+                    Object.keys(sensorData).forEach(key => sensorData[key].shift());
+                }
+
+                updateCharts();
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
-    function sendCommand(button) {
-        buttonStates[button] = buttonStates[button] === "ON" ? "OFF" : "ON"; // Toggle state
-
+    function sendCommand(command) {
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ button: button, state: buttonStates[button] })
+            body: JSON.stringify({ command: command })
         })
         .then(response => response.json())
         .then(data => {
-            const timestamp = new Date().toLocaleString();
-            const logTable = document.getElementById("buttonLog");
-            const row = logTable.insertRow();
-            row.insertCell(0).textContent = button;
-            row.insertCell(1).textContent = buttonStates[button];
-            row.insertCell(2).textContent = timestamp;
+            const timestamp = new Date().toLocaleTimeString();
+            buttonStateLog.innerHTML += `<tr><td>${command}</td><td>${timestamp}</td></tr>`;
         })
         .catch(error => console.error("Error:", error));
     }
@@ -62,41 +111,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setInterval(fetchData, 2000);
     fetchData();
-
-    function createChart(canvasId, label, color) {
-        const ctx = document.getElementById(canvasId).getContext("2d");
-        return new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{
-                    label: label,
-                    borderColor: color,
-                    backgroundColor: color,
-                    fill: false,
-                    data: []
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { type: "time", time: { unit: "minute" } },
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-    }
-
-    function updateChart(chart, timestamp, value) {
-        chart.data.labels.push(timestamp);
-        chart.data.datasets[0].data.push(value);
-
-        if (chart.data.labels.length > maxDataPoints) {
-            chart.data.labels.shift();
-            chart.data.datasets[0].data.shift();
-        }
-
-        chart.update();
-    }
 });
