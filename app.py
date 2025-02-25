@@ -3,9 +3,10 @@ import logging
 import ssl
 import base64
 import threading
-import json, time
+import json
+import time
 import paho.mqtt.client as mqtt
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 # Logging setup
 logging.basicConfig(
@@ -20,10 +21,9 @@ app = Flask(__name__)
 
 # AWS IoT Configuration
 AWS_IOT_ENDPOINT = "a2e8a4czugwpbb-ats.iot.us-west-1.amazonaws.com"
+AWS_IOT_SUBSCRIBE_TOPIC = "esp32/sensorData"
+AWS_IOT_PUBLISH_TOPIC = "esp32/commands"
 MQTT_PORT = 8883
-AWS_IOT_TOPIC = "esp32/sensorData"
-# MQTT_PORT = 8883
-
 
 # Store latest sensor data
 latest_sensor_data = {
@@ -67,12 +67,13 @@ try:
 except Exception as e:
     logger.error(f"❌ TLS Configuration failed: {e}")
 
+# MQTT Callbacks
 def on_connect(client, userdata, flags, rc):
     """Callback when connected to AWS IoT."""
     if rc == 0:
         logger.info("✅ Connected to AWS IoT successfully")
-        client.subscribe(AWS_IOT_TOPIC)
-        logger.info(f"📡 Subscribed to topic: {AWS_IOT_TOPIC}")
+        client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC)
+        logger.info(f"📡 Subscribed to topic: {AWS_IOT_SUBSCRIBE_TOPIC}")
     else:
         logger.error(f"❌ MQTT Connection failed with error code: {rc}")
 
@@ -126,6 +127,25 @@ def get_data():
     """Return the latest sensor data received via MQTT."""
     logger.info("📡 API Request: GET /get-data")
     return jsonify(latest_sensor_data)
+
+@app.route("/send-command", methods=["POST"])
+def send_command():
+    """Publish a message to the MQTT topic `esp32/commands`."""
+    data = request.json
+    if not data or "command" not in data:
+        return jsonify({"error": "Invalid request, missing 'command' field"}), 400
+
+    command = data["command"]
+    try:
+        result = mqtt_client.publish(AWS_IOT_PUBLISH_TOPIC, json.dumps({"command": command}))
+        if result.rc == mqtt.MQTT_ERR_SUCCESS:
+            logger.info(f"📤 Sent MQTT command: {command}")
+            return jsonify({"success": True, "message": f"Command '{command}' sent"})
+        else:
+            return jsonify({"error": "Failed to publish message"}), 500
+    except Exception as e:
+        logger.error(f"❌ Error publishing MQTT message: {e}")
+        return jsonify({"error": "MQTT publishing error"}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

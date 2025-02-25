@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESP32 Sensor Data</title>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>ESP32 Sensor Data</h1>
 
     <div class="card">
-        <p>Temperature: <span id="tempData">Loading...</span></p>
-        <p>Humidity: <span id="humData">Loading...</span></p>
-        <p>Light: <span id="lightData">Loading...</span></p>
-        <p>Soil Moisture: <span id="moistureData">Loading...</span></p>
-    </div>
-
-    <div class="card">
-        <h3 id="ngrokURL">Fetching Ngrok URL...</h3>
+        <p class="sensor-data">Temperature: <span id="tempData">Loading...</span></p>
+        <p class="sensor-data">Humidity: <span id="humData">Loading...</span></p>
+        <p class="sensor-data">Light: <span id="lightData">Loading...</span></p>
+        <p class="sensor-data">Soil Moisture: <span id="moistureData">Loading...</span></p>
     </div>
 
     <div class="form-container">
-        <button id="sendSSID">Set WiFi Credentials</button>
+        <h2>Control Panel</h2>
+        <button id="autoMode">Auto Mode</button>
+        <button id="manual">Manual</button>
+        <button id="button1">Button 1</button>
+        <button id="button2">Button 2</button>
+        <button id="button3">Button 3</button>
     </div>
 </body>
 </html>

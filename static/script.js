@@ -12,9 +12,26 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
-    // Fetch new data every 2 seconds
-    setInterval(fetchData, 2000);
+    function sendCommand(command) {
+        fetch("/send-command", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ command: command })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Sent: " + command);
+            console.log(data);
+        })
+        .catch(error => console.error("Error:", error));
+    }
 
-    // Initial fetch
+    document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
+    document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
+    document.getElementById("button1").addEventListener("click", () => sendCommand("Button 1"));
+    document.getElementById("button2").addEventListener("click", () => sendCommand("Button 2"));
+    document.getElementById("button3").addEventListener("click", () => sendCommand("Button 3"));
+
+    setInterval(fetchData, 2000);
     fetchData();
 });
