@@ -1,7 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     const maxDataPoints = 20;
 
-    // Initialize datasets
+    // Track button states
+    let buttonStates = {
+        "Auto Mode": "OFF",
+        "Manual": "OFF",
+        "Button 1": "OFF",
+        "Button 2": "OFF",
+        "Button 3": "OFF"
+    };
+
+    // Initialize charts
     const tempChart = createChart("tempChart", "Temperature (°C)", "red");
     const humChart = createChart("humChart", "Humidity (%)", "blue");
     const lightChart = createChart("lightChart", "Light (lx)", "yellow");
@@ -26,19 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
+        buttonStates[button] = buttonStates[button] === "ON" ? "OFF" : "ON"; // Toggle state
+
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ button: button })
+            body: JSON.stringify({ button: button, state: buttonStates[button] })
         })
         .then(response => response.json())
         .then(data => {
-            const state = data.message.state;
             const timestamp = new Date().toLocaleString();
             const logTable = document.getElementById("buttonLog");
             const row = logTable.insertRow();
             row.insertCell(0).textContent = button;
-            row.insertCell(1).textContent = state;
+            row.insertCell(1).textContent = buttonStates[button];
             row.insertCell(2).textContent = timestamp;
         })
         .catch(error => console.error("Error:", error));

@@ -1,4 +1,3 @@
-/* General Styling */
 body {
     font-family: 'Arial', sans-serif;
     background: #f4f4f4;
@@ -7,125 +6,61 @@ body {
     padding: 20px;
 }
 
-/* Flexbox Container for Layout */
-.container {
+/* Dashboard Layout */
+.dashboard {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin: 20px;
+    width: 90%;
+    margin: auto;
 }
 
-/* Left Panel (Sensor Data & Buttons) */
-.left-panel {
-    flex: 1;
-    text-align: center;
-}
-
-/* Right Panel (Button Logs) */
-.right-panel {
-    flex: 1;
-    text-align: left;
-}
-
-/* Card Styling */
+/* Sensor Card */
 .card {
     background: white;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 80%;
-    margin: 20px auto;
-    transition: transform 0.2s ease-in-out;
+    width: 100%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover {
-    transform: scale(1.02);
+/* Button Log */
+.button-log table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-/* Sensor Data Styling */
-.sensor-data {
-    font-size: 22px;
-    margin: 10px 0;
-    font-weight: bold;
+.button-log th, .button-log td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
 }
 
-/* Sensor Data Colors */
-#tempData { color: #E74C3C; } /* Red */
-#humData { color: #3498DB; } /* Blue */
-#lightData { color: #F1C40F; } /* Yellow */
-#moistureData { color: #2ECC71; } /* Green */
-
-/* Control Panel */
-.form-container {
-    margin-top: 20px;
+.button-log th {
+    background-color: #007BFF;
+    color: white;
 }
 
+/* Charts */
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+canvas {
+    width: 100%;
+    height: 250px;
+}
+
+/* Buttons */
 button {
     background: #007BFF;
     color: white;
     border: none;
-    padding: 10px 15px;
-    font-size: 16px;
+    padding: 10px;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
     margin: 5px;
-}
-
-button:hover {
-    background: #0056b3;
-}
-
-/* Button Log Table */
-table {
-    width: 90%;
-    margin: 10px auto;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-th {
-    background: #007BFF;
-    color: white;
-}
-
-/* Chart Grid */
-.chart-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin: 30px auto;
-    width: 90%;
-}
-
-canvas {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .chart-container {
-        grid-template-columns: 1fr;
-    }
-
-    .card {
-        width: 100%;
-    }
-
-    button {
-        width: 100px;
-    }
+    border-radius: 5px;
 }
