@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESP32 Sensor Data</title>
-    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -35,16 +33,20 @@
         <div class="right-panel">
             <h2>Button State Log</h2>
             <table>
-                <tr>
-                    <th>Button</th>
-                    <th>Timestamp</th>
-                </tr>
-                <tbody id="buttonStateLog"></tbody>
+                <thead>
+                    <tr>
+                        <th>Button</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="buttonLog">
+                    <tr><td colspan="2">Waiting for button presses...</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
-    <div class="grid-container">
+    <div class="chart-container">
         <canvas id="chartTemp"></canvas>
         <canvas id="chartHum"></canvas>
         <canvas id="chartLight"></canvas>

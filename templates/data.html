@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Received Data Log</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Received Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>Received JSON Data Log</h1>
-  {% if data %}
-    <table border="1">
-      <tr>
-        <th>#</th>
-        <th>Data</th>
-      </tr>
-      {% for idx, item in data.items() %}
-      <tr>
-        <td>{{ idx }}</td>
-        <td><pre>{{ item | tojson(indent=2) }}</pre></td>
-      </tr>
-      {% endfor %}
-    </table>
-  {% else %}
-    <p>No data received yet.</p>
-  {% endif %}
+    <h1>Received JSON Data</h1>
+    {% if data %}
+        <table border="1">
+            <tr>
+                <th>#</th>
+                <th>Data</th>
+            </tr>
+            {% for idx, item in data.items() %}
+                <tr>
+                    <td>{{ idx }}</td>
+                    <td><pre>{{ item | tojson(indent=2) }}</pre></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No data received yet.</p>
+    {% endif %}
 </body>
 </html>
