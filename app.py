@@ -5,6 +5,7 @@ import base64
 import threading
 import json
 import time
+import datetime
 import paho.mqtt.client as mqtt
 from flask import Flask, render_template, jsonify, request
 
@@ -25,15 +26,16 @@ AWS_IOT_SUBSCRIBE_TOPIC = "esp32/sensorData"
 AWS_IOT_PUBLISH_TOPIC = "esp32/commands"
 MQTT_PORT = 8883
 
-# Store latest sensor data
+# Store latest sensor data (including latest timestamp)
 latest_sensor_data = {
     "temperature": "N/A",
     "humidity": "N/A",
     "light": "N/A",
-    "soil_moisture": "N/A"
+    "soil_moisture": "N/A",
+    "timestamp": ""
 }
 
-# Decode AWS IoT certificates from environment variables and store temporarily
+# Paths for temporary certificate storage
 CERT_PATH = "/tmp/device-cert.pem.crt"
 KEY_PATH = "/tmp/device-private.pem.key"
 CA_PATH = "/tmp/AmazonRootCA1.pem"
@@ -83,7 +85,9 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)
-        latest_sensor_data.update(data)  # Update sensor values
+        # Add a timestamp to the data (server-generated)
+        data["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
+        latest_sensor_data.update(data)
         logger.info(f"📩 MQTT Message received on topic `{msg.topic}`: {data}")
     except json.JSONDecodeError as e:
         logger.error(f"❌ Failed to parse MQTT message: {e}")
@@ -95,7 +99,7 @@ def on_disconnect(client, userdata, rc):
     else:
         logger.info("🔌 Disconnected from AWS IoT")
 
-# Configure MQTT Callbacks
+# Set MQTT callbacks
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 mqtt_client.on_disconnect = on_disconnect
