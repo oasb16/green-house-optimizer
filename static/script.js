@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    let buttonStates = {}; // Store button states
+    let buttonLogs = []; // Store button logs
+
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -8,38 +11,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("lightData").textContent = data.sensor_data.light + " lx";
                 document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
 
-                updateButtonStateTable(data.button_states);
-                updateButtonColors(data.button_states);
+                buttonStates = data.button_states; // Store button states
+                updateButtonColors();
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
     function sendCommand(button) {
+        const newState = buttonStates[button] === "ON" ? "OFF" : "ON";
+        buttonStates[button] = newState; // Toggle button state
+
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ button: button })
+            body: JSON.stringify({ button: button, state: newState })
         }).then(response => response.json())
-          .then(data => fetchData()) // Refresh UI after command
+          .then(data => {
+              if (data.success) {
+                  appendLog(button, newState);
+              }
+              fetchData(); // Refresh UI after sending command
+          })
           .catch(error => console.error("Error:", error));
     }
 
-    function updateButtonStateTable(buttonStates) {
-        const tableBody = document.getElementById("buttonStateTableBody");
-        tableBody.innerHTML = ""; // Clear previous entries
+    function appendLog(button, state) {
+        const tableBody = document.getElementById("sensorDataTableBody");
+        const timestamp = new Date().toLocaleString();
 
-        Object.entries(buttonStates).forEach(([button, state]) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${button}</td>
-                <td class="${state === 'ON' ? 'on-state' : 'off-state'}">${state}</td>
-                <td>${new Date().toLocaleString()}</td>
-            `;
-            tableBody.appendChild(row);
-        });
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${button}</td>
+            <td class="${state === 'ON' ? 'on-state' : 'off-state'}">${state}</td>
+            <td>${timestamp}</td>
+        `;
+        tableBody.prepend(row); // Append new log to the top
     }
 
-    function updateButtonColors(buttonStates) {
+    function updateButtonColors() {
         Object.entries(buttonStates).forEach(([button, state]) => {
             const btn = document.getElementById(button);
             if (btn) {

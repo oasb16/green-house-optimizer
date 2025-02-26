@@ -13,7 +13,7 @@ body {
     font-weight: bold;
 }
 
-/* Button Colors */
+/* Button Styling */
 button {
     background: #007BFF;
     color: white;
@@ -30,17 +30,18 @@ button:hover {
     background: #0056b3;
 }
 
-/* Button ON/OFF States */
+/* Active (ON) State */
 button.active {
     background: #28a745 !important; /* Green for ON */
 }
 
+/* Inactive (OFF) State */
 button:not(.active) {
     background: #DC3545 !important; /* Red for OFF */
 }
 
-/* Button Log Table */
-.button-log-container {
+/* Sensor Log Table */
+.sensor-log-container {
     margin-top: 20px;
     text-align: center;
 }
