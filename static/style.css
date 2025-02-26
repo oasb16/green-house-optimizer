@@ -15,7 +15,6 @@ body {
 
 /* Button Styling */
 button {
-    background: #007BFF;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -26,18 +25,14 @@ button {
     transition: background 0.3s;
 }
 
-button:hover {
-    background: #0056b3;
-}
-
 /* Active (ON) State */
 button.active {
-    background: #28a745 !important; /* Green for ON */
+    background: #28a745 !important; /* Green */
 }
 
 /* Inactive (OFF) State */
-button:not(.active) {
-    background: #DC3545 !important; /* Red for OFF */
+button.inactive {
+    background: #DC3545 !important; /* Red */
 }
 
 /* Sensor Log Table */

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     let buttonStates = {}; // Store button states
-    let buttonLogs = []; // Store button logs
 
     function fetchData() {
         fetch("/get-data")
@@ -11,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("lightData").textContent = data.sensor_data.light + " lx";
                 document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
 
-                buttonStates = data.button_states; // Store button states
+                buttonStates = data.button_states || {}; // Store button states
                 updateButtonColors();
             })
             .catch(error => console.error("❌ Fetch error:", error));
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function sendCommand(button) {
         const newState = buttonStates[button] === "ON" ? "OFF" : "ON";
-        buttonStates[button] = newState; // Toggle button state
+        buttonStates[button] = newState; // Toggle state
 
         fetch("/send-command", {
             method: "POST",
@@ -29,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(data => {
               if (data.success) {
                   appendLog(button, newState);
+                  updateButtonColors();
               }
-              fetchData(); // Refresh UI after sending command
           })
           .catch(error => console.error("Error:", error));
     }
@@ -53,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const btn = document.getElementById(button);
             if (btn) {
                 btn.classList.toggle("active", state === "ON");
+                btn.classList.toggle("inactive", state === "OFF");
             }
         });
     }
