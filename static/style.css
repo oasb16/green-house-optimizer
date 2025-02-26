@@ -7,12 +7,6 @@ body {
     padding: 20px;
 }
 
-/* Sensor Data */
-.sensor-data p {
-    font-size: 20px;
-    font-weight: bold;
-}
-
 /* Button Styling */
 button {
     color: white;
@@ -57,12 +51,3 @@ th {
     color: white;
 }
 
-.on-state {
-    color: green;
-    font-weight: bold;
-}
-
-.off-state {
-    color: red;
-    font-weight: bold;
-}
