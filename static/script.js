@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function sendCommand(button) {
         let newState = buttonStates[button] === "ON" ? "OFF" : "ON";
-        
+        console.error("❌❌❌❌ button pressed ❌❌❌:", button)
+        console.error("❌❌❌❌ newState ❌❌❌:", newState)
         // Auto & Manual button logic
         if (button === "Auto Mode" && newState === "ON") {
             buttonStates["Manual"] = "OFF";
