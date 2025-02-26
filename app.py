@@ -25,9 +25,9 @@ AWS_IOT_SUBSCRIBE_TOPIC = "esp32/sensorData"
 AWS_IOT_PUBLISH_TOPIC = "esp32/commands"
 MQTT_PORT = 8883
 
-# Store latest sensor data & button logs
+# Store latest sensor data & button states
 latest_sensor_data = {"temperature": "N/A", "humidity": "N/A", "light": "N/A", "soil_moisture": "N/A", "timestamp": "N/A"}
-button_logs = []
+button_states = {}
 
 # Decode AWS IoT certificates from environment variables
 CERT_PATH = "/tmp/device-cert.pem.crt"
@@ -115,27 +115,30 @@ def index():
 
 @app.route("/get-data", methods=["GET"])
 def get_data():
-    return jsonify({"sensor_data": latest_sensor_data, "button_logs": button_logs})
+    return jsonify({"sensor_data": latest_sensor_data, "button_states": button_states})
 
 @app.route("/send-command", methods=["POST"])
 def send_command():
     """Publish button commands to MQTT topic."""
     data = request.json
-    if not data or "command" not in data:
+    if not data or "button" not in data:
         return jsonify({"error": "Invalid request"}), 400
 
-    command = data["command"]
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    button = data["button"]
+    state = "ON" if button_states.get(button, "OFF") == "OFF" else "OFF"
+    button_states[button] = state
+
+    message = {"button": button, "state": state}
     try:
-        result = mqtt_client.publish(AWS_IOT_PUBLISH_TOPIC, json.dumps({"command": command}))
+        result = mqtt_client.publish(AWS_IOT_PUBLISH_TOPIC, json.dumps(message))
         if result.rc == mqtt.MQTT_ERR_SUCCESS:
-            button_logs.insert(0, {"command": command, "timestamp": timestamp})
-            return jsonify({"success": True})
+            logger.info(f"📤 Sent MQTT command: {message}")
+            return jsonify({"success": True, "message": message})
         else:
             return jsonify({"error": "Failed to publish"}), 500
     except Exception as e:
         logger.error(f"❌ Error publishing MQTT message: {e}")
-        return jsonify({"error": "MQTT error"}), 500
+        return jsonify({"error": "MQTT publishing error"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

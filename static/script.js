@@ -3,27 +3,26 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("/get-data")
             .then(response => response.json())
             .then(data => {
-                console.log("🔄 Updating UI with new values:", data);
-                document.getElementById("tempData").textContent = data.temperature + " °C";
-                document.getElementById("humData").textContent = data.humidity + " %";
-                document.getElementById("lightData").textContent = data.light + " lx";
-                document.getElementById("moistureData").textContent = data.soil_moisture + " %";
+                document.getElementById("tempData").textContent = data.sensor_data.temperature + " °C";
+                document.getElementById("humData").textContent = data.sensor_data.humidity + " %";
+                document.getElementById("lightData").textContent = data.sensor_data.light + " lx";
+                document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
+
+                Object.entries(data.button_states).forEach(([button, state]) => {
+                    document.getElementById(button).classList.toggle("active", state === "ON");
+                });
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
-    function sendCommand(command) {
+    function sendCommand(button) {
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ command: command })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert("Sent: " + command);
-            console.log(data);
-        })
-        .catch(error => console.error("Error:", error));
+            body: JSON.stringify({ button: button })
+        }).then(response => response.json())
+          .then(data => console.log("✅ Sent command:", data))
+          .catch(error => console.error("Error:", error));
     }
 
     document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
