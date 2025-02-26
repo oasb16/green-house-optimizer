@@ -5,36 +5,44 @@ body {
     color: #333;
     text-align: center;
     padding: 20px;
+    margin: 0;
 }
 
-/* Flexbox Container for Layout */
 .container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin: 20px;
 }
 
-/* Left Panel (Sensor Data & Buttons) */
 .left-panel {
     flex: 1;
-    text-align: center;
+    padding: 20px;
 }
 
-/* Right Panel (Button Logs) */
 .right-panel {
     flex: 1;
-    text-align: left;
+    padding: 20px;
+    border-left: 2px solid #ddd;
 }
 
-/* Card Styling */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+canvas {
+    width: 100%;
+    height: 250px;
+}
+
+/* Card Container for sensor data */
 .card {
     background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 80%;
-    margin: 20px auto;
+    margin-bottom: 20px;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -49,13 +57,24 @@ body {
     font-weight: bold;
 }
 
-/* Sensor Data Colors */
-#tempData { color: #E74C3C; } /* Red */
-#humData { color: #3498DB; } /* Blue */
-#lightData { color: #F1C40F; } /* Yellow */
-#moistureData { color: #2ECC71; } /* Green */
+/* Colored Sensor Values */
+#tempData {
+    color: #E74C3C; /* Red */
+}
 
-/* Control Panel */
+#humData {
+    color: #3498DB; /* Blue */
+}
+
+#lightData {
+    color: #F1C40F; /* Yellow */
+}
+
+#moistureData {
+    color: #2ECC71; /* Green */
+}
+
+/* Form and Button Styles */
 .form-container {
     margin-top: 20px;
 }
@@ -77,37 +96,32 @@ button:hover {
 }
 
 /* Button Log Table */
-table {
-    width: 90%;
-    margin: 10px auto;
+#buttonLog {
+    width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
+#buttonLog th, #buttonLog td {
+    border: 1px solid #ccc;
+    padding: 8px;
 }
 
-th {
+#buttonLog th {
     background: #007BFF;
     color: white;
 }
 
-/* Chart Grid */
-.chart-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin: 30px auto;
-    width: 90%;
+/* Charts Container */
+.charts-container {
+    margin-top: 40px;
 }
 
-canvas {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    margin-top: 20px;
 }
 
 /* Responsive Design */
@@ -116,16 +130,7 @@ canvas {
         flex-direction: column;
         align-items: center;
     }
-
-    .chart-container {
+    .chart-grid {
         grid-template-columns: 1fr;
-    }
-
-    .card {
-        width: 100%;
-    }
-
-    button {
-        width: 100px;
     }
 }
