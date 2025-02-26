@@ -8,9 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("lightData").textContent = data.sensor_data.light + " lx";
                 document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
 
-                Object.entries(data.button_states).forEach(([button, state]) => {
-                    document.getElementById(button).classList.toggle("active", state === "ON");
-                });
+                updateButtonStateTable(data.button_states);
+                updateButtonColors(data.button_states);
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
@@ -21,8 +20,32 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ button: button })
         }).then(response => response.json())
-          .then(data => console.log("✅ Sent command:", data))
+          .then(data => fetchData()) // Refresh UI after command
           .catch(error => console.error("Error:", error));
+    }
+
+    function updateButtonStateTable(buttonStates) {
+        const tableBody = document.getElementById("buttonStateTableBody");
+        tableBody.innerHTML = ""; // Clear previous entries
+
+        Object.entries(buttonStates).forEach(([button, state]) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${button}</td>
+                <td class="${state === 'ON' ? 'on-state' : 'off-state'}">${state}</td>
+                <td>${new Date().toLocaleString()}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function updateButtonColors(buttonStates) {
+        Object.entries(buttonStates).forEach(([button, state]) => {
+            const btn = document.getElementById(button);
+            if (btn) {
+                btn.classList.toggle("active", state === "ON");
+            }
+        });
     }
 
     document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
