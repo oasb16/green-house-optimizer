@@ -9,8 +9,7 @@ body {
 
 /* Button Styling */
 button {
-    color: black;
-    background-color: yellow;
+    color: white;
     border: none;
     padding: 10px 15px;
     font-size: 16px;
@@ -22,12 +21,12 @@ button {
 
 /* Active (ON) State */
 button.active {
-    background-color: #28a745 !important; /* Green */
+    background: #28a745 !important; /* Green */
 }
 
 /* Inactive (OFF) State */
 button.inactive {
-    background-color: #DC3545 !important; /* Red */
+    background: #DC3545 !important; /* Red */
 }
 
 /* Sensor Log Table */
