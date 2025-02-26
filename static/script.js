@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     let buttonStates = {}; // Store button states
-    let sensorLogs = []; // Store sensor data logs
 
     function fetchData() {
         fetch("/get-data")
@@ -13,60 +12,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 buttonStates = data.button_states || {}; // Store button states
                 updateButtonColors();
-
-                appendSensorLog(data.sensor_data);
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
     function sendCommand(button) {
-        let newState = buttonStates[button] === "ON" ? "OFF" : "ON";
-        
-        // Auto & Manual button logic
-        if (button === "Auto Mode" && newState === "ON") {
-            buttonStates["Manual"] = "OFF";
-        } else if (button === "Manual" && newState === "ON") {
-            buttonStates["Auto Mode"] = "OFF";
-        }
-        
+        const newState = buttonStates[button] === "ON" ? "OFF" : "ON";
         buttonStates[button] = newState; // Toggle state
-
-        let payload = {
-            button: button,
-            state: newState
-        };
-
-        // If Auto or Manual is changed, send both states together
-        if (button === "Auto Mode" || button === "Manual") {
-            payload = {
-                auto: buttonStates["Auto Mode"],
-                manual: buttonStates["Manual"]
-            };
-        }
 
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ button: button, state: newState })
         }).then(response => response.json())
           .then(data => {
               if (data.success) {
+                  appendLog(button, newState);
                   updateButtonColors();
               }
           })
           .catch(error => console.error("Error:", error));
     }
 
-    function appendSensorLog(sensorData) {
+    function appendLog(button, state) {
         const tableBody = document.getElementById("sensorDataTableBody");
         const timestamp = new Date().toLocaleString();
 
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${sensorData.temperature} °C</td>
-            <td>${sensorData.humidity} %</td>
-            <td>${sensorData.light} lx</td>
-            <td>${sensorData.soil_moisture} %</td>
+            <td>${button}</td>
+            <td class="${state === 'ON' ? 'on-state' : 'off-state'}">${state}</td>
             <td>${timestamp}</td>
         `;
         tableBody.prepend(row); // Append new log to the top
@@ -74,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateButtonColors() {
         Object.entries(buttonStates).forEach(([button, state]) => {
-            const btn = document.getElementById(button.replace(/\s/g, ""));
+            const btn = document.getElementById(button);
             if (btn) {
                 btn.classList.toggle("active", state === "ON");
                 btn.classList.toggle("inactive", state === "OFF");
