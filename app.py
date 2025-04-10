@@ -78,6 +78,7 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)
+        logger.info(f"📩 Raw payload received: {payload}")
         data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
         latest_sensor_data.update(data)
         logger.info(f"📩 MQTT Message received: {data}")
