@@ -20,41 +20,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
-        let newState = buttonStates[button] === "ON" ? "OFF" : "ON";
-        
-        // Auto & Manual button logic
-        if (button === "Auto Mode" && newState === "ON") {
+        // Sync logic for Auto and Manual
+        if (button === "Auto Mode") {
+            buttonStates["Auto Mode"] = "ON";
             buttonStates["Manual"] = "OFF";
-        } else if (button === "Manual" && newState === "ON") {
+        } else if (button === "Manual") {
+            buttonStates["Manual"] = "ON";
             buttonStates["Auto Mode"] = "OFF";
+        } else {
+            const currentState = buttonStates[button];
+            buttonStates[button] = currentState === "OFF" ? "ON" : "OFF";
         }
-        
-        buttonStates[button] = newState; // Toggle state
-
-        let payload = {
-            button: button,
-            state: newState
-        };
-
-        // If Auto or Manual is changed, send both states together
-        if (button === "Auto Mode" || button === "Manual") {
-            payload = {
-                auto: buttonStates["Auto Mode"],
-                manual: buttonStates["Manual"]
-            };
-        }
-
+    
+        updateButtonColors();
+    
+        // ✅ Send only the clicked button and its state
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  updateButtonColors();
-              }
-          })
-          .catch(error => console.error("Error:", error));
+            body: JSON.stringify({
+                button: button,
+                state: buttonStates[button]
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("✅ Sent to backend:", data);
+        })
+        .catch(err => console.error("❌ Send error:", err));
     }
 
     function appendSensorLog(sensorData) {
