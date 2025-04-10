@@ -8,7 +8,7 @@ body {
 }
 
 /* Button Styling */
-button {
+.button {
     color: white !important;
     border: none !important;
     padding: 10px 15px !important;
@@ -19,11 +19,11 @@ button {
     transition: background 0.3s !important;
 }
 
-button.active {
+.button.active {
     background: #28a745 !important; /* Green */
 }
 
-button.inactive {
+.button.inactive {
     background: #DC3545 !important; /* Red */
 }
 
