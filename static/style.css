@@ -9,22 +9,20 @@ body {
 
 /* Button Styling */
 button {
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 5px;
-    transition: background 0.3s;
+    color: white !important;
+    border: none !important;
+    padding: 10px 15px !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    border-radius: 5px !important;
+    margin: 5px !important;
+    transition: background 0.3s !important;
 }
 
-/* Active (ON) State */
 button.active {
     background: #28a745 !important; /* Green */
 }
 
-/* Inactive (OFF) State */
 button.inactive {
     background: #DC3545 !important; /* Red */
 }
