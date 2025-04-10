@@ -121,6 +121,7 @@ def get_data():
 def send_command():
     """Publish button commands to MQTT topic."""
     data = request.json
+    print(f"data : {data}")
     if not data or "button" not in data:
         return jsonify({"error": "Invalid request"}), 400
 
