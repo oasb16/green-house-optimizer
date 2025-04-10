@@ -1,7 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     let buttonStates = {}; // Store button states
     let sensorLogs = []; // Store sensor data logs
-
+    
+    function updateButtonColors() {
+        Object.entries(buttonStates).forEach(([button, state]) => {
+            const btn = document.getElementById(button.replace(/\s/g, ""));
+            if (btn) {
+                btn.classList.remove("active", "inactive");
+                btn.classList.add(state === "ON" ? "active" : "inactive");
+            }
+        });
+    }    
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -65,15 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
         tableBody.prepend(row); // Append new log to the top
     }
 
-    function updateButtonColors() {
-        Object.entries(buttonStates).forEach(([button, state]) => {
-            const btn = document.getElementById(button.replace(/\s/g, ""));
-            if (btn) {
-                btn.classList.remove("active", "inactive");
-                btn.classList.add(state === "ON" ? "active" : "inactive");
-            }
-        });
-    }    
 
     document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
     document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
