@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     let buttonStates = {}; // Store button states
     let sensorLogs = []; // Store sensor data logs
-    
+
     function updateButtonColors() {
         Object.entries(buttonStates).forEach(([button, state]) => {
             const btn = document.getElementById(button.replace(/\s/g, ""));
@@ -77,9 +77,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
     document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
-    document.getElementById("button1").addEventListener("click", () => sendCommand("Button 1"));
-    document.getElementById("button2").addEventListener("click", () => sendCommand("Button 2"));
-    document.getElementById("button3").addEventListener("click", () => sendCommand("Button 3"));
+    document.getElementById("button1").addEventListener("click", () => sendCommand("Water Pump"));
+    document.getElementById("button2").addEventListener("click", () => sendCommand("Vent"));
+    document.getElementById("button3").addEventListener("click", () => sendCommand("Light"));
 
     setInterval(fetchData, 2000);
     fetchData();
