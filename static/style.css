@@ -8,7 +8,7 @@ body {
 }
 
 /* Button Styling */
-.button {
+button {
     color: white !important;
     border: none !important;
     padding: 10px 15px !important;
