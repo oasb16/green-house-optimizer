@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("AutoMode").addEventListener("click", () => sendCommand("Auto Mode"));
     document.getElementById("Manual").addEventListener("click", () => sendCommand("Manual"));
-    document.getElementById("Waterpump").addEventListener("click", () => sendCommand("Water Pump"));
+    document.getElementById("WaterPump").addEventListener("click", () => sendCommand("Water Pump"));
     document.getElementById("Vent").addEventListener("click", () => sendCommand("Vent"));
     document.getElementById("Light").addEventListener("click", () => sendCommand("Light"));
 
