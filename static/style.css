@@ -19,13 +19,16 @@ body {
     transition: background 0.3s !important;
 }
 
-.button.active {
-    background: #28a745 !important; /* Green */
+button.active {
+    background-color: #28a745 !important; /* Green */
+    color: white !important;
 }
 
-.button.inactive {
-    background: #DC3545 !important; /* Red */
+button.inactive {
+    background-color: #dc3545 !important; /* Red */
+    color: white !important;
 }
+
 
 .active {
     background-color: #28a745 !important; /* Green */

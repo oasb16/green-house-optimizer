@@ -4,13 +4,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateButtonColors() {
         Object.entries(buttonStates).forEach(([button, state]) => {
-            const btn = document.getElementById(button.replace(/\s/g, ""));
+            const elementId = button.replace(/\s/g, "");
+            const btn = document.getElementById(elementId);
+            console.log(`🔧 Updating ${elementId} → ${state}`, btn);
+    
             if (btn) {
                 btn.classList.remove("active", "inactive");
                 btn.classList.add(state === "ON" ? "active" : "inactive");
             }
         });
-    }    
+    }
+      
 
     function fetchData() {
         fetch("/get-data")
