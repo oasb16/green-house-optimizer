@@ -76,11 +76,11 @@ document.addEventListener("DOMContentLoaded", function () {
         Object.entries(buttonStates).forEach(([button, state]) => {
             const btn = document.getElementById(button.replace(/\s/g, ""));
             if (btn) {
-                btn.classList.toggle("active", state === "ON");
-                btn.classList.toggle("inactive", state === "OFF");
+                btn.classList.remove("active", "inactive");
+                btn.classList.add(state === "ON" ? "active" : "inactive");
             }
         });
-    }
+    }    
 
     document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
     document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
