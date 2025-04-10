@@ -37,9 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (button === "Manual") {
             buttonStates["Manual"] = "ON";
             buttonStates["Auto Mode"] = "OFF";
-        } else {
-            const currentState = buttonStates[button];
-            buttonStates[button] = currentState === "OFF" ? "ON" : "OFF";
+        } else if (button === "Water Pump") {
+            buttonStates["Water Pump"] = currentState === "OFF" ? "ON" : "OFF";
+        } else if (button === "Vent") {
+            buttonStates["Vent"] = currentState === "OFF" ? "ON" : "OFF";
+        } else if (button === "Light") {
+            buttonStates["Light"] = currentState === "OFF" ? "ON" : "OFF";
         }
     
         updateButtonColors();
