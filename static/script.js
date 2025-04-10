@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }    
+
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -77,9 +78,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
     document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
-    document.getElementById("button1").addEventListener("click", () => sendCommand("Water Pump"));
-    document.getElementById("button2").addEventListener("click", () => sendCommand("Vent"));
-    document.getElementById("button3").addEventListener("click", () => sendCommand("Light"));
+    document.getElementById("waterpump").addEventListener("click", () => sendCommand("Water Pump"));
+    document.getElementById("vent").addEventListener("click", () => sendCommand("Vent"));
+    document.getElementById("light").addEventListener("click", () => sendCommand("Light"));
 
     setInterval(fetchData, 2000);
     fetchData();

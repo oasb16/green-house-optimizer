@@ -27,6 +27,17 @@ body {
     background: #DC3545 !important; /* Red */
 }
 
+.active {
+    background-color: #28a745 !important; /* Green */
+    color: white;
+}
+
+.inactive {
+    background-color: #dc3545 !important; /* Red */
+    color: white;
+}
+
+
 /* Sensor Log Table */
 .sensor-log-container {
     margin-top: 20px;
