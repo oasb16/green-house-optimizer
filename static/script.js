@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
 
                 buttonStates = data.button_states || {}; // Store button states
-                updateButtonColors();
 
                 appendSensorLog(data.sensor_data);
             })
