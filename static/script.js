@@ -4,17 +4,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateButtonColors() {
         Object.entries(buttonStates).forEach(([button, state]) => {
-            const elementId = button.replace(/\s/g, "");
-            const btn = document.getElementById(elementId);
-            console.log(`🔧 Updating ${elementId} → ${state}`, btn);
-    
+            const btn = document.getElementById(button.replace(/\s/g, ""));
             if (btn) {
                 btn.classList.remove("active", "inactive");
                 btn.classList.add(state === "ON" ? "active" : "inactive");
             }
         });
-    }
-      
+    }    
 
     function fetchData() {
         fetch("/get-data")
@@ -80,11 +76,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    document.getElementById("autoMode").addEventListener("click", () => sendCommand("Auto Mode"));
-    document.getElementById("manual").addEventListener("click", () => sendCommand("Manual"));
-    document.getElementById("waterpump").addEventListener("click", () => sendCommand("Water Pump"));
-    document.getElementById("vent").addEventListener("click", () => sendCommand("Vent"));
-    document.getElementById("light").addEventListener("click", () => sendCommand("Light"));
+    document.getElementById("AutoMode").addEventListener("click", () => sendCommand("Auto Mode"));
+    document.getElementById("Manual").addEventListener("click", () => sendCommand("Manual"));
+    document.getElementById("Waterpump").addEventListener("click", () => sendCommand("Water Pump"));
+    document.getElementById("Vent").addEventListener("click", () => sendCommand("Vent"));
+    document.getElementById("Light").addEventListener("click", () => sendCommand("Light"));
 
     setInterval(fetchData, 2000);
     fetchData();
