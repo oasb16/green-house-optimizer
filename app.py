@@ -127,7 +127,9 @@ def send_command():
     #     return jsonify({"error": "Invalid request"}), 400
 
     button = data["button"]
-    state = "ON" if button_states.get(button, "OFF") == "OFF" else "OFF"
+    state = data["state"]
+
+    # ✅ Store state
     button_states[button] = state
 
     message = {"button": button, "state": state}
