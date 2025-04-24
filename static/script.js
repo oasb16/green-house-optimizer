@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("lightData").textContent = data.sensor_data.light + " lx";
                 document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
 
-                buttonStates = data.button_states || {}; // Store button states
+                // buttonStates = data.button_states || {}; // Store button states
 
                 appendSensorLog(data.sensor_data);
                 updateGauges(data.sensor_data); // Update gauges with sensor data
