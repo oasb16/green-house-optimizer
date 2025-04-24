@@ -161,11 +161,11 @@ th {
 
 .pollen {
     position: absolute;
-    width: 8px; 
-    height: 8px;
-    background: radial-gradient(circle, rgba(255,255,200,0.6), transparent);
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    animation: drift 10s linear infinite;
+    animation: floaty linear infinite;
 }
 
 @keyframes fall {
@@ -176,5 +176,10 @@ th {
 @keyframes drift {
     0% { transform: translate(0, 0); }
     100% { transform: translate(100px, 200px); }
+}
+
+@keyframes floaty {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100vh); }
 }
 
