@@ -4,3 +4,4 @@ beautifulsoup4
 gunicorn
 ngrok
 paho-mqtt  # For MQTT client to subscribe to AWS IoT
+whitenoise==6.6.0
