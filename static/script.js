@@ -3,6 +3,31 @@ const hour = new Date().getHours();
 document.body.classList.add(hour > 18 || hour < 6 ? 'night' : 'day');
 
 window.onload = () => {
+    document.getElementById("AutoMode")?.addEventListener("click", () => {
+        console.log("Auto Mode clicked");
+        document.getElementById("AutoMode")?.classList.add("active-auto");
+        document.getElementById("Manual")?.classList.remove("active-manual");
+    });
+
+    document.getElementById("Manual")?.addEventListener("click", () => {
+        console.log("Manual clicked");
+        document.getElementById("Manual")?.classList.add("active-manual");
+        document.getElementById("AutoMode")?.classList.remove("active-auto");
+    });
+
+    document.getElementById("WaterPump")?.addEventListener("click", () => {
+        console.log("Water Pump triggered");
+    });
+
+    document.getElementById("Vent")?.addEventListener("click", () => {
+        console.log("Vent triggered");
+        document.getElementById("Vent")?.classList.toggle("blinking");
+    });
+
+    document.getElementById("Light")?.addEventListener("click", () => {
+        console.log("Light triggered");
+    });
+
     const container = document.querySelector('.floating-leaves');
     for (let i = 0; i < 15; i++) {
         const leaf = document.createElement('div');
@@ -22,20 +47,6 @@ window.onload = () => {
         dot.style.animationDuration = `${8 + Math.random() * 6}s`;
         pollenContainer.appendChild(dot);
     }
-
-    document.getElementById("autoModeBtn")?.addEventListener("click", () => {
-        document.getElementById("autoModeBtn")?.classList.add("active-auto");
-        document.getElementById("manualBtn")?.classList.remove("active-manual");
-    });
-
-    document.getElementById("manualBtn")?.addEventListener("click", () => {
-        document.getElementById("manualBtn")?.classList.add("active-manual");
-        document.getElementById("autoModeBtn")?.classList.remove("active-auto");
-    });
-
-    document.getElementById("ventBtn")?.addEventListener("click", () => {
-        document.getElementById("ventBtn")?.classList.toggle("blinking");
-    });
 };
 
 // Pollen
