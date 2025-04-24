@@ -103,3 +103,28 @@ th {
     opacity: 0.4;
 }
 
+.floating-leaves {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.leaf {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background-image: url('/static/particles/leaf.png');
+    background-size: cover;
+    opacity: 0.4;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(360deg); }
+}
+
