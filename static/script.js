@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Invalid value for gauge:", value);
             console.log(" value for gauge:", 1);
         }
+        if (value === "N/A") {
+            console.error("Invalid value for gauge:", value);
+            value = 1;
+        }
         value = 1
         const container = document.getElementById(containerId);
         container.innerHTML = `
