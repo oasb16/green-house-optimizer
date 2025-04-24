@@ -7,6 +7,7 @@ import json
 import time
 import paho.mqtt.client as mqtt
 from flask import Flask, render_template, jsonify, request
+from whitenoise import WhiteNoise
 
 # Logging setup
 logging.basicConfig(
@@ -18,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 # Flask app setup
 app = Flask(__name__)
+app.wsgi_app = WhiteNoise(app.wsgi_app, root="static/")
 
 # AWS IoT Configuration
 AWS_IOT_ENDPOINT = "a2e8a4czugwpbb-ats.iot.us-west-1.amazonaws.com"
