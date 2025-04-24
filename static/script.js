@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         createGauge("moistureGauge", sensorData.soil_moisture);
     }
 
+    
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
