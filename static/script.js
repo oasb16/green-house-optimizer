@@ -29,7 +29,7 @@ window.onload = () => {
     });
 
     const container = document.querySelector('.floating-leaves');
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 10; i++) {
         const leaf = document.createElement('div');
         leaf.className = 'leaf';
         leaf.style.left = `${Math.random() * 100}vw`;
@@ -39,7 +39,7 @@ window.onload = () => {
     }
 
     const pollenContainer = document.querySelector('.pollen-layer');
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         const dot = document.createElement('div');
         dot.className = 'pollen';
         dot.style.left = `${Math.random() * 100}vw`;
