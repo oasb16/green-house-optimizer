@@ -12,21 +12,20 @@
             tsParticles.load("tsparticles", {
                 fullScreen: { enable: true, zIndex: -1 },
                 particles: {
-                    number: { value: 50 },
+                    number: { value: 25 },
                     shape: {
                         type: "image",
                         image: {
-                            src: "/static/particles/leaf.png", // Updated to use local file
-                            width: 20,
-                            height: 20
+                            src: "/static/particles/leaf.png",
+                            width: 32,
+                            height: 32
                         }
                     },
-                    size: { value: { min: 4, max: 8 } },
-                    move: { enable: true, speed: 1, direction: "none", random: true },
-                    opacity: { value: 0.5 },
+                    size: { value: { min: 6, max: 10 } },
+                    move: { enable: true, speed: 1, direction: "bottom", outMode: "out" },
+                    opacity: { value: 0.5 }
                 },
-                interactivity: { detect_on: "canvas", events: { onhover: { enable: false } } },
-                background: { color: "transparent" }
+                detectRetina: true
             });
         });
     </script>
