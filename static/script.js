@@ -7,19 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Invalid value for gauge:", value);
             console.log(" value for gauge:", 1);
         }
-        else {
-            value = 1
-            const container = document.getElementById(containerId);
-            container.innerHTML = `
-                <div style="position: relative; width: 100px; height: 50px;">
-                    <svg viewBox="0 0 100 50" style="width: 100%; height: 100%;">
-                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#ddd" stroke-width="10" />
-                        <path d="M 10 50 A 40 40 0 0 1 ${10 + 80 * (value / 100)} 50" fill="none" stroke="#28a745" stroke-width="10" />
-                    </svg>
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold;">${value}</div>
-                </div>
-            `;
-          }
+        value = 1
+        const container = document.getElementById(containerId);
+        container.innerHTML = `
+            <div style="position: relative; width: 100px; height: 50px;">
+                <svg viewBox="0 0 100 50" style="width: 100%; height: 100%;">
+                    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#ddd" stroke-width="10" />
+                    <path d="M 10 50 A 40 40 0 0 1 ${10 + 80 * (value / 100)} 50" fill="none" stroke="#28a745" stroke-width="10" />
+                </svg>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold;">${value}</div>
+            </div>
+        `;
     }
 
     function updateGauges(sensorData) {
