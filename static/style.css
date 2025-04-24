@@ -191,7 +191,7 @@ th {
 }
 
 @keyframes floaty {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-100vh); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100vh); }
 }
 
