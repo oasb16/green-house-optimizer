@@ -10,7 +10,7 @@ GreenHouse Optimizer is an advanced ESP32-powered smart greenhouse automation sy
 
 Experience the application in action:
 
-👉 [Live Demo](https://your-demo-url.com)
+👉 [Live Demo](https://green-house-optimizer-dbdeefd2f385.herokuapp.com/)
 
 ---
 
