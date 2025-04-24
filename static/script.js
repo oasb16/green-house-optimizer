@@ -1,16 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // let buttonStates = {}; // Store button states
-    let sensorLogs = []; // Store sensor data logs
-
-    // function updateButtonColors() {
-    //     Object.entries(buttonStates).forEach(([button, state]) => {
-    //         const btn = document.getElementById(button.replace(/\s/g, ""));
-    //         if (btn) {
-    //             btn.classList.remove("active", "inactive");
-    //             btn.classList.add(state === "ON" ? "active" : "inactive");
-    //         }
-    //     });
-    // }    
+    let sensorLogs = []; // Store sensor data logs  
 
     function fetchData() {
         fetch("/get-data")
