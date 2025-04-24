@@ -27,7 +27,7 @@ button.active {
 
 button.inactive {
     background-color: white !important; /* Red */
-    color: white !important;
+    color: black !important;
 }
 
 
@@ -38,7 +38,7 @@ button.inactive {
 
 .inactive {
     background-color: white !important; /* Red */
-    color: white;
+    color: black;
 }
 
 
