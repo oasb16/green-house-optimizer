@@ -29,57 +29,51 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
-        // Sync logic for Auto and Manual
+        // Create a deep copy of buttonStates to avoid unintended mutations
+        const newButtonStates = { ...buttonStates };
+
         if (button === "Auto Mode") {
-            buttonStates["Auto Mode"] = "ON";
-            buttonStates["Manual"] = "OFF";
-            buttonStates["Vent"] = "OFF";
-            buttonStates["Water Pump"] = "OFF";
-            buttonStates["Light"] = "OFF";
-        } if (button === "Manual") {
-            buttonStates["Manual"] = "ON";
-            buttonStates["Auto Mode"] = "OFF";
-            buttonStates["Vent"] = "OFF";
-            buttonStates["Water Pump"] = "OFF";
-            buttonStates["Light"] = "OFF";
-        } if (button === "Water Pump") {
-            if (buttonStates["Water Pump"] === "ON") {
-                buttonStates["Water Pump"] = "OFF";
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
+            if (newButtonStates["Auto Mode"] === "OFF") {
+                newButtonStates["Auto Mode"] = "ON";
+                newButtonStates["Manual"] = "DISABLED";
+                newButtonStates["Water Pump"] = "DISABLED";
+                newButtonStates["Vent"] = "DISABLED";
+                newButtonStates["Light"] = "DISABLED";
+            } else {
+                newButtonStates["Auto Mode"] = "OFF";
+                newButtonStates["Manual"] = "ON";
+                newButtonStates["Water Pump"] = "AVAILABLE";
+                newButtonStates["Vent"] = "AVAILABLE";
+                newButtonStates["Light"] = "AVAILABLE";
             }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Water Pump"] = "ON";
+        } else if (button === "Manual") {
+            if (newButtonStates["Manual"] === "OFF") {
+                newButtonStates["Auto Mode"] = "DISABLED";
+                newButtonStates["Manual"] = "ON";
+                newButtonStates["Water Pump"] = "AVAILABLE";
+                newButtonStates["Vent"] = "AVAILABLE";
+                newButtonStates["Light"] = "AVAILABLE";
+            } else {
+                newButtonStates["Auto Mode"] = "ON";
+                newButtonStates["Manual"] = "OFF";
+                newButtonStates["Water Pump"] = "DISABLED";
+                newButtonStates["Vent"] = "DISABLED";
+                newButtonStates["Light"] = "DISABLED";
             }
-        } if (button === "Vent") {
-            if (buttonStates["Vent"] === "ON") {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Vent"] = "OFF";
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Vent"] = "ON";
-            }
-        } if (button === "Light") {
-            if (buttonStates["Light"] === "ON") {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Light"] = "OFF";
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Light"] = "ON";
+        } else if (["Water Pump", "Vent", "Light"].includes(button)) {
+            if (newButtonStates[button] === "OFF") {
+                newButtonStates[button] = "ON";
+                newButtonStates["Manual"] = "ON";
+            } else {
+                newButtonStates[button] = "OFF";
             }
         }
-    
+
+        // Update the global buttonStates only after all changes are made
+        buttonStates = newButtonStates;
+
         updateButtonColors();
-    
-        // ✅ Send only the clicked button and its state
+
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
