@@ -116,21 +116,23 @@ def index():
 
 @app.route("/get-data", methods=["GET"])
 def get_data():
+    logger.info("📤 Sending latest sensor data and button states")
     return jsonify({"sensor_data": latest_sensor_data, "button_states": button_states})
 
 @app.route("/send-command", methods=["POST"])
 def send_command():
     """Publish button commands to MQTT topic."""
     data = request.json
-    print(f"data : {data}")
-    # if not data or "button" not in data:
-    #     return jsonify({"error": "Invalid request"}), 400
+    if not data or "button" not in data:
+        logger.error("❌ Invalid request: Missing 'button' in payload")
+        return jsonify({"error": "Invalid request"}), 400
 
     button = data["button"]
     state = data["state"]
 
     # ✅ Store state
     button_states[button] = state
+    logger.info(f"🔘 Button state updated: {button} -> {state}")
 
     message = {"button": button, "state": state}
     try:
@@ -139,6 +141,7 @@ def send_command():
             logger.info(f"📤 Sent MQTT command: {message}")
             return jsonify({"success": True, "message": message})
         else:
+            logger.error("❌ Failed to publish MQTT message")
             return jsonify({"error": "Failed to publish"}), 500
     except Exception as e:
         logger.error(f"❌ Error publishing MQTT message: {e}")

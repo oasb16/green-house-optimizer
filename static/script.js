@@ -27,11 +27,27 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
     }
 
+    // Added logging for user interactions and gauge updates
+    function logButtonClick(button) {
+        console.log(`Button clicked: ${button}`);
+    }
+
+    function logGaugeUpdate(sensorType, value) {
+        console.log(`Gauge updated: ${sensorType} -> ${value}`);
+    }
+
     function updateGauges(sensorData) {
         createGauge("tempGauge", sensorData.temperature);
+        logGaugeUpdate("Temperature", sensorData.temperature);
+
         createGauge("humGauge", sensorData.humidity);
+        logGaugeUpdate("Humidity", sensorData.humidity);
+
         createGauge("lightGauge", sensorData.light);
+        logGaugeUpdate("Light", sensorData.light);
+
         createGauge("moistureGauge", sensorData.soil_moisture);
+        logGaugeUpdate("Soil Moisture", sensorData.soil_moisture);
     }
 
     function fetchData() {
@@ -131,12 +147,31 @@ document.addEventListener("DOMContentLoaded", function () {
         tableBody.prepend(row); // Append new log to the top
     }
 
+    // Update existing event listeners to include logging
+    document.getElementById("AutoMode").addEventListener("click", () => {
+        logButtonClick("Auto Mode");
+        sendCommand("Auto Mode");
+    });
 
-    document.getElementById("AutoMode").addEventListener("click", () => sendCommand("Auto Mode"));
-    document.getElementById("Manual").addEventListener("click", () => sendCommand("Manual"));
-    document.getElementById("WaterPump").addEventListener("click", () => sendCommand("Water Pump"));
-    document.getElementById("Vent").addEventListener("click", () => sendCommand("Vent"));
-    document.getElementById("Light").addEventListener("click", () => sendCommand("Light"));
+    document.getElementById("Manual").addEventListener("click", () => {
+        logButtonClick("Manual");
+        sendCommand("Manual");
+    });
+
+    document.getElementById("WaterPump").addEventListener("click", () => {
+        logButtonClick("Water Pump");
+        sendCommand("Water Pump");
+    });
+
+    document.getElementById("Vent").addEventListener("click", () => {
+        logButtonClick("Vent");
+        sendCommand("Vent");
+    });
+
+    document.getElementById("Light").addEventListener("click", () => {
+        logButtonClick("Light");
+        sendCommand("Light");
+    });
 
     setInterval(fetchData, 2000);
     fetchData();
