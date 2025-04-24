@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (button === "Water Pump") {
             if (buttonStates["Water Pump"] === "ON") {
                 buttonStates["Water Pump"] = "OFF";
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
             }
             else {
                 buttonStates["Manual"] = "ON";
@@ -53,6 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else if (button === "Vent") {
             if (buttonStates["Vent"] === "ON") {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
                 buttonStates["Vent"] = "OFF";
             }
             else {
@@ -62,6 +66,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else if (button === "Light") {
             if (buttonStates["Light"] === "ON") {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
                 buttonStates["Light"] = "OFF";
             }
             else {
