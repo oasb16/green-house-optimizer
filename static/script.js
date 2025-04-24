@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
+        // Handle Auto Mode button
         if (button === "Auto Mode") {
-            // Toggle Auto Mode
             if (buttonStates["Auto Mode"] === "OFF") {
                 buttonStates["Auto Mode"] = "ON";
                 buttonStates["Manual"] = "OFF";
@@ -40,8 +40,10 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 buttonStates["Auto Mode"] = "OFF";
             }
-        } else if (button === "Manual") {
-            // Toggle Manual Mode
+        }
+
+        // Handle Manual button
+        if (button === "Manual") {
             if (buttonStates["Manual"] === "OFF") {
                 buttonStates["Manual"] = "ON";
                 buttonStates["Auto Mode"] = "OFF";
@@ -51,14 +53,38 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 buttonStates["Manual"] = "OFF";
             }
-        } else if (["Water Pump", "Vent", "Light"].includes(button)) {
-            // Toggle individual buttons
-            buttonStates[button] = buttonStates[button] === "OFF" ? "ON" : "OFF";
+        }
 
-            // Ensure Manual is ON and Auto Mode is OFF if any of these buttons are ON
-            if (buttonStates[button] === "ON") {
+        // Handle Water Pump button
+        if (button === "Water Pump") {
+            if (buttonStates["Water Pump"] === "OFF") {
+                buttonStates["Water Pump"] = "ON";
                 buttonStates["Manual"] = "ON";
                 buttonStates["Auto Mode"] = "OFF";
+            } else {
+                buttonStates["Water Pump"] = "OFF";
+            }
+        }
+
+        // Handle Vent button
+        if (button === "Vent") {
+            if (buttonStates["Vent"] === "OFF") {
+                buttonStates["Vent"] = "ON";
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
+            } else {
+                buttonStates["Vent"] = "OFF";
+            }
+        }
+
+        // Handle Light button
+        if (button === "Light") {
+            if (buttonStates["Light"] === "OFF") {
+                buttonStates["Light"] = "ON";
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
+            } else {
+                buttonStates["Light"] = "OFF";
             }
         }
 
