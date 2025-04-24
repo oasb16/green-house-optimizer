@@ -174,7 +174,7 @@ th {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 233, 90, 0.9);
     border-radius: 50%;
     animation: floaty linear infinite;
     z-index: 3;
