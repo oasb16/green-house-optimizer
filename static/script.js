@@ -37,17 +37,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateGauges(sensorData) {
-        createGauge("tempGauge", sensorData.temperature);
-        logGaugeUpdate("Temperature", sensorData.temperature);
+        const gauges = [
+            { id: "tempGauge", value: sensorData.temperature, label: "Temperature" },
+            { id: "humGauge", value: sensorData.humidity, label: "Humidity" },
+            { id: "lightGauge", value: sensorData.light, label: "Light" },
+            { id: "moistureGauge", value: sensorData.soil_moisture, label: "Soil Moisture" }
+        ];
 
-        createGauge("humGauge", sensorData.humidity);
-        logGaugeUpdate("Humidity", sensorData.humidity);
-
-        createGauge("lightGauge", sensorData.light);
-        logGaugeUpdate("Light", sensorData.light);
-
-        createGauge("moistureGauge", sensorData.soil_moisture);
-        logGaugeUpdate("Soil Moisture", sensorData.soil_moisture);
+        gauges.forEach(gauge => {
+            const container = document.getElementById(gauge.id);
+            if (gauge.value === null || gauge.value === 0) {
+                container.classList.remove("valid");
+                container.style.opacity = "0.5";
+                container.innerHTML = `<div style='color: gray;'>Awaiting Data...</div>`;
+            } else {
+                container.classList.add("valid");
+                container.style.opacity = "1";
+                createGauge(gauge.id, gauge.value);
+            }
+        });
     }
 
     function fetchData() {

@@ -117,7 +117,19 @@ def index():
 @app.route("/get-data", methods=["GET"])
 def get_data():
     logger.info("📤 Sending latest sensor data and button states")
-    return jsonify({"sensor_data": latest_sensor_data, "button_states": button_states})
+    response = {
+        "sensor_data": {
+            "temperature": latest_sensor_data.get("temperature", "Awaiting Data..."),
+            "humidity": latest_sensor_data.get("humidity", "Awaiting Data..."),
+            "light": latest_sensor_data.get("light", "Awaiting Data..."),
+            "soil_moisture": latest_sensor_data.get("soil_moisture", "Awaiting Data...")
+        },
+        "button_states": button_states
+    }
+    for key, value in response["sensor_data"].items():
+        if value == "Awaiting Data...":
+            logger.warning(f"⚠️ Missing or malformed sensor value for {key}")
+    return jsonify(response)
 
 @app.route("/send-command", methods=["POST"])
 def send_command():

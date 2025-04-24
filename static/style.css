@@ -17,7 +17,7 @@ button {
     cursor: pointer !important;
     border-radius: 5px !important;
     margin: 5px !important;
-    transition: background 0.3s !important;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 button.active {
@@ -30,6 +30,9 @@ button.inactive {
     color: black !important;
 }
 
+button:hover {
+    transform: scale(1.05);
+}
 
 .active {
     background-color: #28a745 !important; /* Green */
@@ -40,7 +43,6 @@ button.inactive {
     background-color: white !important; /* Red */
     color: black;
 }
-
 
 /* Sensor Log Table */
 .sensor-log-container {
@@ -81,5 +83,18 @@ th {
     width: 120px;
     height: 120px;
     margin: 10px auto;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0.5;
+}
+
+.gauge.valid {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+#tsparticles {
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: -1;
 }
 
