@@ -6,11 +6,19 @@ document.addEventListener("DOMContentLoaded", function () {
         Object.entries(buttonStates).forEach(([button, state]) => {
             const btn = document.getElementById(button.replace(/\s/g, ""));
             if (btn) {
-                btn.classList.remove("active", "inactive");
-                btn.classList.add(state === "ON" ? "active" : "inactive");
+                btn.classList.remove("active", "inactive", "disabled", "available");
+                if (state === "ON") {
+                    btn.classList.add("active");
+                } else if (state === "OFF") {
+                    btn.classList.add("inactive");
+                } else if (state === "DISABLED") {
+                    btn.classList.add("disabled");
+                } else if (state === "AVAILABLE") {
+                    btn.classList.add("available");
+                }
             }
         });
-    }    
+    }
 
     function fetchData() {
         fetch("/get-data")
@@ -24,32 +32,59 @@ document.addEventListener("DOMContentLoaded", function () {
                 buttonStates = data.button_states || {}; // Store button states
 
                 appendSensorLog(data.sensor_data);
+                updateButtonColors();
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
     function sendCommand(button) {
-        // Sync logic for Auto and Manual
         if (button === "Auto Mode") {
-            buttonStates["Auto Mode"] = "ON";
-            buttonStates["Manual"] = "OFF";
+            if (buttonStates["Auto Mode"] === "OFF") {
+                buttonStates = {
+                    "Auto Mode": "ON",
+                    "Manual": "DISABLED",
+                    "Water Pump": "DISABLED",
+                    "Vent": "DISABLED",
+                    "Light": "DISABLED"
+                };
+            } else {
+                buttonStates = {
+                    "Auto Mode": "OFF",
+                    "Manual": "ON",
+                    "Water Pump": "AVAILABLE",
+                    "Vent": "AVAILABLE",
+                    "Light": "AVAILABLE"
+                };
+            }
         } else if (button === "Manual") {
-            buttonStates["Manual"] = "ON";
-            buttonStates["Auto Mode"] = "OFF";
-        } else if (button === "Water Pump") {
-            const currentState = buttonStates[button];
-            buttonStates["Water Pump"] = currentState === "OFF" ? "ON" : "OFF";
-        } else if (button === "Vent") {
-            const currentState = buttonStates[button];
-            buttonStates["Vent"] = currentState === "OFF" ? "ON" : "OFF";
-        } else if (button === "Light") {
-            const currentState = buttonStates[button];
-            buttonStates["Light"] = currentState === "OFF" ? "ON" : "OFF";
+            if (buttonStates["Manual"] === "OFF") {
+                buttonStates = {
+                    "Auto Mode": "DISABLED",
+                    "Manual": "ON",
+                    "Water Pump": "AVAILABLE",
+                    "Vent": "AVAILABLE",
+                    "Light": "AVAILABLE"
+                };
+            } else {
+                buttonStates = {
+                    "Auto Mode": "ON",
+                    "Manual": "OFF",
+                    "Water Pump": "DISABLED",
+                    "Vent": "DISABLED",
+                    "Light": "DISABLED"
+                };
+            }
+        } else if (["Water Pump", "Vent", "Light"].includes(button)) {
+            if (buttonStates[button] === "OFF") {
+                buttonStates[button] = "ON";
+                buttonStates["Manual"] = "ON";
+            } else {
+                buttonStates[button] = "OFF";
+            }
         }
-    
+
         updateButtonColors();
-    
-        // ✅ Send only the clicked button and its state
+
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -79,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         tableBody.prepend(row); // Append new log to the top
     }
-
 
     document.getElementById("AutoMode").addEventListener("click", () => sendCommand("Auto Mode"));
     document.getElementById("Manual").addEventListener("click", () => sendCommand("Manual"));
