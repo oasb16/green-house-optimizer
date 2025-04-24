@@ -29,48 +29,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
-        // Create a deep copy of buttonStates to avoid unintended mutations
-        const newButtonStates = { ...buttonStates };
+        // Reset all buttons to inactive by default
+        Object.keys(buttonStates).forEach(key => {
+            buttonStates[key] = "OFF";
+        });
 
         if (button === "Auto Mode") {
-            if (newButtonStates["Auto Mode"] === "OFF") {
-                newButtonStates["Auto Mode"] = "ON";
-                newButtonStates["Manual"] = "DISABLED";
-                newButtonStates["Water Pump"] = "DISABLED";
-                newButtonStates["Vent"] = "DISABLED";
-                newButtonStates["Light"] = "DISABLED";
-            } else {
-                newButtonStates["Auto Mode"] = "OFF";
-                newButtonStates["Manual"] = "ON";
-                newButtonStates["Water Pump"] = "AVAILABLE";
-                newButtonStates["Vent"] = "AVAILABLE";
-                newButtonStates["Light"] = "AVAILABLE";
-            }
+            buttonStates["Auto Mode"] = "ON";
+            buttonStates["Manual"] = "OFF";
         } else if (button === "Manual") {
-            if (newButtonStates["Manual"] === "OFF") {
-                newButtonStates["Auto Mode"] = "DISABLED";
-                newButtonStates["Manual"] = "ON";
-                newButtonStates["Water Pump"] = "AVAILABLE";
-                newButtonStates["Vent"] = "AVAILABLE";
-                newButtonStates["Light"] = "AVAILABLE";
-            } else {
-                newButtonStates["Auto Mode"] = "ON";
-                newButtonStates["Manual"] = "OFF";
-                newButtonStates["Water Pump"] = "DISABLED";
-                newButtonStates["Vent"] = "DISABLED";
-                newButtonStates["Light"] = "DISABLED";
-            }
+            buttonStates["Manual"] = "ON";
+            buttonStates["Auto Mode"] = "OFF";
         } else if (["Water Pump", "Vent", "Light"].includes(button)) {
-            if (newButtonStates[button] === "OFF") {
-                newButtonStates[button] = "ON";
-                newButtonStates["Manual"] = "ON";
-            } else {
-                newButtonStates[button] = "OFF";
-            }
+            buttonStates[button] = buttonStates[button] === "OFF" ? "ON" : "OFF";
+            buttonStates["Manual"] = "ON"; // Ensure Manual is ON when these are toggled
+            buttonStates["Auto Mode"] = "OFF"; // Ensure Auto Mode is OFF
         }
-
-        // Update the global buttonStates only after all changes are made
-        buttonStates = newButtonStates;
 
         updateButtonColors();
 
