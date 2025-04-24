@@ -37,14 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
             buttonStates["Manual"] = "ON";
             buttonStates["Auto Mode"] = "OFF";
         } else if (button === "Water Pump") {
-            const currentState = buttonStates[button];
-            buttonStates["Water Pump"] = currentState === "OFF" ? "ON" : "OFF";
+            buttonStates["Water Pump"] === "OFF" ? "ON" : "OFF";
         } else if (button === "Vent") {
-            const currentState = buttonStates[button];
-            buttonStates["Vent"] = currentState === "OFF" ? "ON" : "OFF";
+            buttonStates["Vent"] === "OFF" ? "ON" : "OFF";
         } else if (button === "Light") {
-            const currentState = buttonStates[button];
-            buttonStates["Light"] = currentState === "OFF" ? "ON" : "OFF";
+            buttonStates["Light"] === "OFF" ? "ON" : "OFF";
         }
     
         updateButtonColors();
