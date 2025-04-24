@@ -156,29 +156,49 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Update existing event listeners to include logging
-    document.getElementById("AutoMode").addEventListener("click", () => {
-        logButtonClick("Auto Mode");
-        sendCommand("Auto Mode");
+    document.getElementById("AutoMode").addEventListener("click", function() {
+        console.log("Auto Mode activated");
+        // Placeholder logic for Auto Mode
+        fetch("/toggle-auto", { method: "POST" })
+            .then(response => response.json())
+            .then(data => console.log("Auto Mode response:", data))
+            .catch(error => console.error("Error toggling Auto Mode:", error));
     });
 
-    document.getElementById("Manual").addEventListener("click", () => {
-        logButtonClick("Manual");
-        sendCommand("Manual");
+    document.getElementById("Manual").addEventListener("click", function() {
+        console.log("Manual Mode activated");
+        // Placeholder logic for Manual Mode
+        fetch("/toggle-manual", { method: "POST" })
+            .then(response => response.json())
+            .then(data => console.log("Manual Mode response:", data))
+            .catch(error => console.error("Error toggling Manual Mode:", error));
     });
 
-    document.getElementById("WaterPump").addEventListener("click", () => {
-        logButtonClick("Water Pump");
-        sendCommand("Water Pump");
+    document.getElementById("WaterPump").addEventListener("click", function() {
+        console.log("Water Pump activated");
+        // Placeholder logic for Water Pump
+        fetch("/toggle-water-pump", { method: "POST" })
+            .then(response => response.json())
+            .then(data => console.log("Water Pump response:", data))
+            .catch(error => console.error("Error toggling Water Pump:", error));
     });
 
-    document.getElementById("Vent").addEventListener("click", () => {
-        logButtonClick("Vent");
-        sendCommand("Vent");
+    document.getElementById("Vent").addEventListener("click", function() {
+        console.log("Vent activated");
+        // Placeholder logic for Vent
+        fetch("/toggle-vent", { method: "POST" })
+            .then(response => response.json())
+            .then(data => console.log("Vent response:", data))
+            .catch(error => console.error("Error toggling Vent:", error));
     });
 
-    document.getElementById("Light").addEventListener("click", () => {
-        logButtonClick("Light");
-        sendCommand("Light");
+    document.getElementById("Light").addEventListener("click", function() {
+        console.log("Light activated");
+        // Placeholder logic for Light
+        fetch("/toggle-light", { method: "POST" })
+            .then(response => response.json())
+            .then(data => console.log("Light response:", data))
+            .catch(error => console.error("Error toggling Light:", error));
     });
 
     setInterval(fetchData, 2000);
