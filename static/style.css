@@ -64,12 +64,13 @@ th {
     color: white;
 }
 
-/* Center align the gauge containers */
+/* Arrange gauges horizontally */
 .gauge-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
+    gap: 20px; /* Add spacing between gauges */
     margin: 20px auto;
 }
 
