@@ -12,19 +12,33 @@ window.onload = () => {
         leaf.style.animationDelay = `${Math.random() * 5}s`;
         container.appendChild(leaf);
     }
+
+    const pollenContainer = document.querySelector('.pollen-layer');
+    for (let i = 0; i < 20; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'pollen';
+        dot.style.left = `${Math.random() * 100}vw`;
+        dot.style.top = `${Math.random() * 100}vh`;
+        dot.style.animationDuration = `${8 + Math.random() * 6}s`;
+        pollenContainer.appendChild(dot);
+    }
+
+    document.getElementById("autoModeBtn")?.addEventListener("click", () => {
+        document.getElementById("autoModeBtn")?.classList.add("active-auto");
+        document.getElementById("manualBtn")?.classList.remove("active-manual");
+    });
+
+    document.getElementById("manualBtn")?.addEventListener("click", () => {
+        document.getElementById("manualBtn")?.classList.add("active-manual");
+        document.getElementById("autoModeBtn")?.classList.remove("active-auto");
+    });
+
+    document.getElementById("ventBtn")?.addEventListener("click", () => {
+        document.getElementById("ventBtn")?.classList.toggle("blinking");
+    });
 };
 
 // Pollen
-const pollenContainer = document.querySelector('.pollen-layer');
-for (let i = 0; i < 20; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'pollen';
-    dot.style.left = `${Math.random() * 100}vw`;
-    dot.style.top = `${Math.random() * 100}vh`;
-    dot.style.animationDuration = `${8 + Math.random() * 6}s`;
-    pollenContainer.appendChild(dot);
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     let sensorLogs = []; // Store sensor data logs  
 
@@ -201,21 +215,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("Light").addEventListener("click", () => {
         logButtonClick("Light");
         sendCommand("Light");
-    });
-
-    // Example UI feedback
-    document.getElementById("autoModeBtn").addEventListener("click", () => {
-        document.getElementById("autoModeBtn").classList.add("active-auto");
-        document.getElementById("manualBtn").classList.remove("active-manual");
-    });
-    document.getElementById("manualBtn").addEventListener("click", () => {
-        document.getElementById("manualBtn").classList.add("active-manual");
-        document.getElementById("autoModeBtn").classList.remove("active-auto");
-    });
-
-    // Add blinking logic for Vent / Light if desired
-    document.getElementById("ventBtn").addEventListener("click", () => {
-        document.getElementById("ventBtn").classList.toggle("blinking");
     });
 
     setInterval(fetchData, 2000);
