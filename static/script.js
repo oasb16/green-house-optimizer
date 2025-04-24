@@ -1,3 +1,15 @@
+window.onload = () => {
+    const container = document.querySelector('.floating-leaves');
+    for (let i = 0; i < 15; i++) {
+        const leaf = document.createElement('div');
+        leaf.className = 'leaf';
+        leaf.style.left = `${Math.random() * 100}vw`;
+        leaf.style.animationDuration = `${8 + Math.random() * 5}s`;
+        leaf.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(leaf);
+    }
+};
+
 document.addEventListener("DOMContentLoaded", function () {
     let sensorLogs = []; // Store sensor data logs  
 
