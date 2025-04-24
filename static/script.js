@@ -29,54 +29,46 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
-        // Sync logic for Auto and Manual
+        const toggle = (btn) => {
+            buttonStates[btn] = (buttonStates[btn] === "ON") ? "OFF" : "ON";
+        };
+    
+        const turnOffAllDevices = () => {
+            buttonStates["Water Pump"] = "OFF";
+            buttonStates["Vent"] = "OFF";
+            buttonStates["Light"] = "OFF";
+        };
+    
         if (button === "Auto Mode") {
+            // Rule 5: Auto mode resets everything else
             buttonStates["Auto Mode"] = "ON";
             buttonStates["Manual"] = "OFF";
-            buttonStates["Vent"] = "OFF";
-            buttonStates["Water Pump"] = "OFF";
-            buttonStates["Light"] = "OFF";
-        } else if (button === "Manual") {
-            buttonStates["Manual"] = "ON";
-            buttonStates["Auto Mode"] = "OFF";
-            buttonStates["Vent"] = "OFF";
-            buttonStates["Water Pump"] = "OFF";
-            buttonStates["Light"] = "OFF";
-        } else if (button === "Water Pump") {
-            if (buttonStates["Water Pump"] === "ON") {
-                buttonStates["Water Pump"] = "OFF";
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Water Pump"] = "ON";
-            }
-        } else if (button === "Vent") {
-            if (buttonStates["Vent"] === "ON") {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Vent"] = "OFF";
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Vent"] = "ON";
-            }
-        } else if (button === "Light") {
-            if (buttonStates["Light"] === "ON") {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Light"] = "OFF";
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Light"] = "ON";
-            }
+            turnOffAllDevices();
         }
     
+        else if (button === "Manual") {
+            // Rule 6: Manual mode resets everything else
+            buttonStates["Manual"] = "ON";
+            buttonStates["Auto Mode"] = "OFF";
+            turnOffAllDevices();
+        }
+    
+        else if (["Water Pump", "Vent", "Light"].includes(button)) {
+            // Rule 4: Toggle button individually
+            toggle(button);
+    
+            // Rule 3: Activating any device flips to Manual mode
+            if (buttonStates[button] === "ON") {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
+            }
+    
+            // Rule 1: If all 3 are OFF, don't switch back to Auto implicitly
+            // No-op
+        }
+    
+        console.log(JSON.stringify(buttonStates, null, 2));
+
         updateButtonColors();
     
         // ✅ Send only the clicked button and its state
