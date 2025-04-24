@@ -1,6 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
     let sensorLogs = []; // Store sensor data logs  
 
+    function createGauge(containerId, value) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `
+            <div style="position: relative; width: 100px; height: 50px;">
+                <svg viewBox="0 0 100 50" style="width: 100%; height: 100%;">
+                    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#ddd" stroke-width="10" />
+                    <path d="M 10 50 A 40 40 0 0 1 ${10 + 80 * (value / 100)} 50" fill="none" stroke="#28a745" stroke-width="10" />
+                </svg>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; font-weight: bold;">${value}</div>
+            </div>
+        `;
+    }
+
+    function updateGauges(sensorData) {
+        createGauge("tempGauge", sensorData.temperature);
+        createGauge("humGauge", sensorData.humidity);
+        createGauge("lightGauge", sensorData.light);
+        createGauge("moistureGauge", sensorData.soil_moisture);
+    }
+
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -13,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 buttonStates = data.button_states || {}; // Store button states
 
                 appendSensorLog(data.sensor_data);
+                updateGauges(data.sensor_data); // Update gauges with sensor data
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
