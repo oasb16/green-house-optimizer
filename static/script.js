@@ -29,67 +29,57 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
-        // Handle Auto Mode button
+        // Sync logic for Auto and Manual
         if (button === "Auto Mode") {
-            if (buttonStates["Auto Mode"] === "OFF") {
-                buttonStates["Auto Mode"] = "ON";
-                buttonStates["Manual"] = "OFF";
+            buttonStates["Auto Mode"] = "ON";
+            buttonStates["Manual"] = "OFF";
+            buttonStates["Vent"] = "OFF";
+            buttonStates["Water Pump"] = "OFF";
+            buttonStates["Light"] = "OFF";
+        } else if (button === "Manual") {
+            buttonStates["Manual"] = "ON";
+            buttonStates["Auto Mode"] = "OFF";
+            buttonStates["Vent"] = "OFF";
+            buttonStates["Water Pump"] = "OFF";
+            buttonStates["Light"] = "OFF";
+        } else if (button === "Water Pump") {
+            if (buttonStates["Water Pump"] === "ON") {
                 buttonStates["Water Pump"] = "OFF";
-                buttonStates["Vent"] = "OFF";
-                buttonStates["Light"] = "OFF";
-            } else {
-                buttonStates["Auto Mode"] = "OFF";
-            }
-        }
-
-        // Handle Manual button
-        if (button === "Manual") {
-            if (buttonStates["Manual"] === "OFF") {
                 buttonStates["Manual"] = "ON";
                 buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Water Pump"] = "OFF";
-                buttonStates["Vent"] = "OFF";
-                buttonStates["Light"] = "OFF";
-            } else {
-                buttonStates["Manual"] = "OFF";
             }
-        }
-
-        // Handle Water Pump button
-        if (button === "Water Pump") {
-            if (buttonStates["Water Pump"] === "OFF") {
+            else {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
                 buttonStates["Water Pump"] = "ON";
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-            } else {
-                buttonStates["Water Pump"] = "OFF";
             }
-        }
-
-        // Handle Vent button
-        if (button === "Vent") {
-            if (buttonStates["Vent"] === "OFF") {
-                buttonStates["Vent"] = "ON";
+        } else if (button === "Vent") {
+            if (buttonStates["Vent"] === "ON") {
                 buttonStates["Manual"] = "ON";
                 buttonStates["Auto Mode"] = "OFF";
-            } else {
                 buttonStates["Vent"] = "OFF";
             }
-        }
-
-        // Handle Light button
-        if (button === "Light") {
-            if (buttonStates["Light"] === "OFF") {
-                buttonStates["Light"] = "ON";
+            else {
                 buttonStates["Manual"] = "ON";
                 buttonStates["Auto Mode"] = "OFF";
-            } else {
+                buttonStates["Vent"] = "ON";
+            }
+        } else if (button === "Light") {
+            if (buttonStates["Light"] === "ON") {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
                 buttonStates["Light"] = "OFF";
             }
+            else {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
+                buttonStates["Light"] = "ON";
+            }
         }
-
+    
         updateButtonColors();
-
+    
+        // ✅ Send only the clicked button and its state
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
