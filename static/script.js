@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let sensorLogs = []; // Store sensor data logs  
 
     function createGauge(containerId, value) {
+        console.log("createGauge containerId, value:", containerId, value);
         const container = document.getElementById(containerId);
         container.innerHTML = `
             <div style="position: relative; width: 100px; height: 50px;">
