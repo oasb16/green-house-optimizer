@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let buttonStates = {}; // Store button states
+    // let buttonStates = {}; // Store button states
     let sensorLogs = []; // Store sensor data logs
 
-    function updateButtonColors() {
-        Object.entries(buttonStates).forEach(([button, state]) => {
-            const btn = document.getElementById(button.replace(/\s/g, ""));
-            if (btn) {
-                btn.classList.remove("active", "inactive");
-                btn.classList.add(state === "ON" ? "active" : "inactive");
-            }
-        });
-    }    
+    // function updateButtonColors() {
+    //     Object.entries(buttonStates).forEach(([button, state]) => {
+    //         const btn = document.getElementById(button.replace(/\s/g, ""));
+    //         if (btn) {
+    //             btn.classList.remove("active", "inactive");
+    //             btn.classList.add(state === "ON" ? "active" : "inactive");
+    //         }
+    //     });
+    // }    
 
     function fetchData() {
         fetch("/get-data")
@@ -28,70 +28,39 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("❌ Fetch error:", error));
     }
 
+    const buttonStates = {
+        "Auto Mode": "OFF",
+        "Manual": "OFF",
+        "Water Pump": "OFF",
+        "Vent": "OFF",
+        "Light": "OFF"
+    };
+    
     function sendCommand(button) {
-        // Sync logic for Auto and Manual
+        // Reset logic for mutual exclusivity
         if (button === "Auto Mode") {
+            setAllButtons("OFF");
             buttonStates["Auto Mode"] = "ON";
-            buttonStates["Manual"] = "OFF";
-            buttonStates["Vent"] = "OFF";
-            buttonStates["Water Pump"] = "OFF";
-            buttonStates["Light"] = "OFF";
         } else if (button === "Manual") {
+            setAllButtons("OFF");
             buttonStates["Manual"] = "ON";
-            buttonStates["Auto Mode"] = "OFF";
-            buttonStates["Vent"] = "OFF";
-            buttonStates["Water Pump"] = "OFF";
-            buttonStates["Light"] = "OFF";
-        } else if (button === "Water Pump") {
-            if (buttonStates["Water Pump"] === "ON") {
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Water Pump"] = "OFF";
-                buttonStates["Manual"] = "ON";
-                if (buttonStates["Vent"] === "ON") { buttonStates["Vent"] = "ON"; } else {buttonStates["Vent"] = "OFF";}
-                if (buttonStates["Light"] === "ON") { buttonStates["Light"] = "ON"; } else {buttonStates["Light"] = "OFF";}
-            }
-            else {
-                buttonStates["Water Pump"] = "ON";
+        } else {
+            // Toggle the clicked button (Water Pump, Vent, Light)
+            const newState = buttonStates[button] === "ON" ? "OFF" : "ON";
+            buttonStates[button] = newState;
+    
+            // If any of these buttons turn ON, Manual ON and Auto OFF
+            if (newState === "ON") {
                 buttonStates["Manual"] = "ON";
                 buttonStates["Auto Mode"] = "OFF";
-                if (buttonStates["Vent"] === "ON") { buttonStates["Vent"] = "ON"; } else {buttonStates["Vent"] = "OFF";}
-                if (buttonStates["Light"] === "ON") { buttonStates["Light"] = "ON"; } else {buttonStates["Light"] = "OFF";}
             }
-        } else if (button === "Vent") {
-            if (buttonStates["Vent"] === "ON") {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Vent"] = "OFF";
-                if (buttonStates["Water Pump"] === "ON") { buttonStates["Water Pump"] = "ON"; } else {buttonStates["Water Pump"] = "OFF";}
-                if (buttonStates["Light"] === "ON") { buttonStates["Light"] = "ON"; } else {buttonStates["Light"] = "OFF";}
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Vent"] = "ON";
-                if (buttonStates["Water Pump"] === "ON") { buttonStates["Water Pump"] = "ON"; } else {buttonStates["Water Pump"] = "OFF";}
-                if (buttonStates["Light"] === "ON") { buttonStates["Light"] = "ON"; } else {buttonStates["Light"] = "OFF";}
-            }
-        } else if (button === "Light") {
-            if (buttonStates["Light"] === "ON") {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Light"] = "OFF";
-                if (buttonStates["Vent"] === "ON") { buttonStates["Vent"] = "ON"; } else {buttonStates["Vent"] = "OFF";}
-                if (buttonStates["Water Pump"] === "ON") { buttonStates["Water Pump"] = "ON"; } else {buttonStates["Water Pump"] = "OFF";}
-            }
-            else {
-                buttonStates["Manual"] = "ON";
-                buttonStates["Auto Mode"] = "OFF";
-                buttonStates["Light"] = "ON";
-                if (buttonStates["Vent"] === "ON") { buttonStates["Vent"] = "ON"; } else {buttonStates["Vent"] = "OFF";}
-                if (buttonStates["Water Pump"] === "ON") { buttonStates["Water Pump"] = "ON"; } else {buttonStates["Water Pump"] = "OFF";}
-            }
+    
+            // If all control buttons are OFF, keep Manual as ON or allow OFF?
+            // Optional: Add fallback logic if needed
         }
     
         updateButtonColors();
     
-        // ✅ Send only the clicked button and its state
         fetch("/send-command", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -106,6 +75,23 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(err => console.error("❌ Send error:", err));
     }
+    
+    function setAllButtons(state) {
+        Object.keys(buttonStates).forEach(key => {
+            buttonStates[key] = state;
+        });
+    }
+    
+    function updateButtonColors() {
+        Object.entries(buttonStates).forEach(([button, state]) => {
+            const btn = document.getElementById(button.replace(/\s/g, ""));
+            if (btn) {
+                btn.classList.remove("active", "inactive");
+                btn.classList.add(state === "ON" ? "active" : "inactive");
+            }
+        });
+    }
+    
 
     function appendSensorLog(sensorData) {
         const tableBody = document.getElementById("sensorDataTableBody");
