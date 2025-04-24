@@ -33,6 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (button === "Auto Mode") {
             buttonStates["Auto Mode"] = "ON";
             buttonStates["Manual"] = "OFF";
+            buttonStates["Vent"] = "OFF";
+            buttonStates["Water Pump"] = "OFF";
+            buttonStates["Light"] = "OFF";
         } else if (button === "Manual") {
             buttonStates["Manual"] = "ON";
             buttonStates["Auto Mode"] = "OFF";
