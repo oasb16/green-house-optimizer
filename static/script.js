@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         createGauge("moistureGauge", sensorData.soil_moisture);
     }
 
-    
+
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 buttonStates = data.button_states || {}; // Store button states
 
-                appendSensorLog(data.sensor_data);
-                updateGauges(data.sensor_data); // Update gauges with sensor data
+                // appendSensorLog(data.sensor_data);
+                // updateGauges(data.sensor_data); // Update gauges with sensor data
             })
             .catch(error => console.error("❌ Fetch error:", error));
     }
