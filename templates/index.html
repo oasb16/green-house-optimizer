@@ -6,32 +6,8 @@
     <title>Greenhouse optimizer</title>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@3/tsparticles.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            tsParticles.load("tsparticles", {
-                fullScreen: { enable: true, zIndex: -1 },
-                particles: {
-                    number: { value: 25 },
-                    shape: {
-                        type: "image",
-                        image: {
-                            src: "/static/particles/leaf.png",
-                            width: 32,
-                            height: 32
-                        }
-                    },
-                    size: { value: { min: 6, max: 10 } },
-                    move: { enable: true, speed: 1, direction: "bottom", outMode: "out" },
-                    opacity: { value: 0.5 }
-                },
-                detectRetina: true
-            });
-        });
-    </script>
 </head>
 <body>
-    <div id="tsparticles"></div>
     <h1>Greenhouse optimizer</h1>
 
     <div class="card">

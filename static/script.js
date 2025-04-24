@@ -37,25 +37,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateGauges(sensorData) {
-        const gauges = [
-            { id: "tempGauge", value: sensorData.temperature, label: "Temperature" },
-            { id: "humGauge", value: sensorData.humidity, label: "Humidity" },
-            { id: "lightGauge", value: sensorData.light, label: "Light" },
-            { id: "moistureGauge", value: sensorData.soil_moisture, label: "Soil Moisture" }
-        ];
+        createGauge("tempGauge", sensorData.temperature);
+        logGaugeUpdate("Temperature", sensorData.temperature);
 
-        gauges.forEach(gauge => {
-            const container = document.getElementById(gauge.id);
-            if (gauge.value === null || gauge.value === 0) {
-                container.classList.remove("valid");
-                container.style.opacity = "0.5";
-                container.innerHTML = `<div style='color: gray;'>Awaiting Data...</div>`;
-            } else {
-                container.classList.add("valid");
-                container.style.opacity = "1";
-                createGauge(gauge.id, gauge.value);
-            }
-        });
+        createGauge("humGauge", sensorData.humidity);
+        logGaugeUpdate("Humidity", sensorData.humidity);
+
+        createGauge("lightGauge", sensorData.light);
+        logGaugeUpdate("Light", sensorData.light);
+
+        createGauge("moistureGauge", sensorData.soil_moisture);
+        logGaugeUpdate("Soil Moisture", sensorData.soil_moisture);
     }
 
     function fetchData() {
@@ -156,63 +148,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Update existing event listeners to include logging
-    document.getElementById("AutoMode").addEventListener("click", function() {
-        console.log("Auto Mode activated");
-        // Placeholder logic for Auto Mode
-        fetch("/toggle-auto", { method: "POST" })
-            .then(response => response.json())
-            .then(data => console.log("Auto Mode response:", data))
-            .catch(error => console.error("Error toggling Auto Mode:", error));
+    document.getElementById("AutoMode").addEventListener("click", () => {
+        logButtonClick("Auto Mode");
+        sendCommand("Auto Mode");
     });
 
-    document.getElementById("Manual").addEventListener("click", function() {
-        console.log("Manual Mode activated");
-        // Placeholder logic for Manual Mode
-        fetch("/toggle-manual", { method: "POST" })
-            .then(response => response.json())
-            .then(data => console.log("Manual Mode response:", data))
-            .catch(error => console.error("Error toggling Manual Mode:", error));
+    document.getElementById("Manual").addEventListener("click", () => {
+        logButtonClick("Manual");
+        sendCommand("Manual");
     });
 
-    document.getElementById("WaterPump").addEventListener("click", function() {
-        console.log("Water Pump activated");
-        // Placeholder logic for Water Pump
-        fetch("/toggle-water-pump", { method: "POST" })
-            .then(response => response.json())
-            .then(data => console.log("Water Pump response:", data))
-            .catch(error => console.error("Error toggling Water Pump:", error));
+    document.getElementById("WaterPump").addEventListener("click", () => {
+        logButtonClick("Water Pump");
+        sendCommand("Water Pump");
     });
 
-    document.getElementById("Vent").addEventListener("click", function() {
-        console.log("Vent activated");
-        // Placeholder logic for Vent
-        fetch("/toggle-vent", { method: "POST" })
-            .then(response => response.json())
-            .then(data => console.log("Vent response:", data))
-            .catch(error => console.error("Error toggling Vent:", error));
+    document.getElementById("Vent").addEventListener("click", () => {
+        logButtonClick("Vent");
+        sendCommand("Vent");
     });
 
-    document.getElementById("Light").addEventListener("click", function() {
-        console.log("Light activated");
-        // Placeholder logic for Light
-        fetch("/toggle-light", { method: "POST" })
-            .then(response => response.json())
-            .then(data => console.log("Light response:", data))
-            .catch(error => console.error("Error toggling Light:", error));
+    document.getElementById("Light").addEventListener("click", () => {
+        logButtonClick("Light");
+        sendCommand("Light");
     });
 
     setInterval(fetchData, 2000);
     fetchData();
 });
-
-window.onload = () => {
-    const container = document.querySelector('.floating-leaves');
-    for (let i = 0; i < 15; i++) {
-        const leaf = document.createElement('div');
-        leaf.className = 'leaf';
-        leaf.style.left = `${Math.random() * 100}vw`;
-        leaf.style.animationDuration = `${8 + Math.random() * 5}s`;
-        leaf.style.animationDelay = `${Math.random() * 5}s`;
-        container.appendChild(leaf);
-    }
-};
