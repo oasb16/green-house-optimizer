@@ -1,3 +1,7 @@
+// Mode-based background
+const hour = new Date().getHours();
+document.body.classList.add(hour > 18 || hour < 6 ? 'night' : 'day');
+
 window.onload = () => {
     const container = document.querySelector('.floating-leaves');
     for (let i = 0; i < 15; i++) {
@@ -9,6 +13,17 @@ window.onload = () => {
         container.appendChild(leaf);
     }
 };
+
+// Pollen
+const pollenContainer = document.querySelector('.pollen-layer');
+for (let i = 0; i < 20; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'pollen';
+    dot.style.left = `${Math.random() * 100}vw`;
+    dot.style.top = `${Math.random() * 100}vh`;
+    dot.style.animationDuration = `${8 + Math.random() * 6}s`;
+    pollenContainer.appendChild(dot);
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     let sensorLogs = []; // Store sensor data logs  
@@ -60,6 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         createGauge("moistureGauge", sensorData.soil_moisture);
         logGaugeUpdate("Soil Moisture", sensorData.soil_moisture);
+
+        // Wind logic (based on humidity)
+        updateLeafSpeed(sensorData.humidity);
     }
 
     function fetchData() {
@@ -185,6 +203,29 @@ document.addEventListener("DOMContentLoaded", function () {
         sendCommand("Light");
     });
 
+    // Example UI feedback
+    document.getElementById("autoModeBtn").addEventListener("click", () => {
+        document.getElementById("autoModeBtn").classList.add("active-auto");
+        document.getElementById("manualBtn").classList.remove("active-manual");
+    });
+    document.getElementById("manualBtn").addEventListener("click", () => {
+        document.getElementById("manualBtn").classList.add("active-manual");
+        document.getElementById("autoModeBtn").classList.remove("active-auto");
+    });
+
+    // Add blinking logic for Vent / Light if desired
+    document.getElementById("ventBtn").addEventListener("click", () => {
+        document.getElementById("ventBtn").classList.toggle("blinking");
+    });
+
     setInterval(fetchData, 2000);
     fetchData();
 });
+
+// Wind logic (based on humidity)
+function updateLeafSpeed(humidity) {
+    const speed = humidity > 80 ? 3 : humidity > 50 ? 2 : 1;
+    document.querySelectorAll('.leaf').forEach(leaf => {
+        leaf.style.animationDuration = `${8 / speed}s`;
+    });
+}

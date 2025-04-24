@@ -7,6 +7,15 @@ body {
     padding: 20px;
 }
 
+body.day {
+    background: #eefaf1;
+    color: #111;
+}
+body.night {
+    background: linear-gradient(to bottom, #02111d, #063c3f);
+    color: #e2ffe2;
+}
+
 /* Button Styling */
 button {
     color: black !important;
@@ -28,6 +37,24 @@ button.active {
 button.inactive {
     background-color: white !important; /* Red */
     color: black !important;
+}
+
+button.active-auto { 
+    background-color: #25c25a; 
+    color: white; 
+}
+
+button.active-manual { 
+    background-color: #ff9500; 
+    color: white; 
+}
+
+button.blinking { 
+    animation: blink 1s infinite; 
+}
+
+@keyframes blink { 
+    50% { opacity: 0.5; } 
 }
 
 button:hover {
@@ -103,6 +130,15 @@ th {
     opacity: 0.4;
 }
 
+.floating-leaves, .pollen-layer {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
 .floating-leaves {
     position: fixed;
     top: 0; left: 0;
@@ -123,8 +159,22 @@ th {
     animation: fall linear infinite;
 }
 
+.pollen {
+    position: absolute;
+    width: 8px; 
+    height: 8px;
+    background: radial-gradient(circle, rgba(255,255,200,0.6), transparent);
+    border-radius: 50%;
+    animation: drift 10s linear infinite;
+}
+
 @keyframes fall {
     0% { transform: translateY(-10vh) rotate(0deg); }
     100% { transform: translateY(110vh) rotate(360deg); }
+}
+
+@keyframes drift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(100px, 200px); }
 }
 
