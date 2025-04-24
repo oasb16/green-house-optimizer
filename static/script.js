@@ -29,21 +29,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sendCommand(button) {
-        // Reset all buttons to inactive by default
-        Object.keys(buttonStates).forEach(key => {
-            buttonStates[key] = "OFF";
-        });
-
         if (button === "Auto Mode") {
-            buttonStates["Auto Mode"] = "ON";
-            buttonStates["Manual"] = "OFF";
+            // Toggle Auto Mode
+            if (buttonStates["Auto Mode"] === "OFF") {
+                buttonStates["Auto Mode"] = "ON";
+                buttonStates["Manual"] = "OFF";
+                buttonStates["Water Pump"] = "OFF";
+                buttonStates["Vent"] = "OFF";
+                buttonStates["Light"] = "OFF";
+            } else {
+                buttonStates["Auto Mode"] = "OFF";
+            }
         } else if (button === "Manual") {
-            buttonStates["Manual"] = "ON";
-            buttonStates["Auto Mode"] = "OFF";
+            // Toggle Manual Mode
+            if (buttonStates["Manual"] === "OFF") {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
+                buttonStates["Water Pump"] = "OFF";
+                buttonStates["Vent"] = "OFF";
+                buttonStates["Light"] = "OFF";
+            } else {
+                buttonStates["Manual"] = "OFF";
+            }
         } else if (["Water Pump", "Vent", "Light"].includes(button)) {
+            // Toggle individual buttons
             buttonStates[button] = buttonStates[button] === "OFF" ? "ON" : "OFF";
-            buttonStates["Manual"] = "ON"; // Ensure Manual is ON when these are toggled
-            buttonStates["Auto Mode"] = "OFF"; // Ensure Auto Mode is OFF
+
+            // Ensure Manual is ON and Auto Mode is OFF if any of these buttons are ON
+            if (buttonStates[button] === "ON") {
+                buttonStates["Manual"] = "ON";
+                buttonStates["Auto Mode"] = "OFF";
+            }
         }
 
         updateButtonColors();
