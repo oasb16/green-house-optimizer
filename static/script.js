@@ -2,17 +2,21 @@ document.addEventListener("DOMContentLoaded", function () {
     let sensorLogs = []; // Store sensor data logs  
 
     function createGauge(containerId, value) {
-        console.log("createGauge containerId, value:", containerId, value);
-        if (value < 0 || value > 100) {
-            console.error("Invalid value for gauge:", value);
-            console.log(" value for gauge:", 1);
-        }
-        if (value === "N/A") {
-            console.error("Invalid value for gauge:", value);
-            value = 1;
-        }
-        value = 1
         const container = document.getElementById(containerId);
+
+        // Check if the container exists
+        if (!container) {
+            console.error(`Gauge container with ID '${containerId}' not found.`);
+            return;
+        }
+
+        // Validate the value
+        if (isNaN(value) || value === null || value === undefined) {
+            console.error(`Invalid value for gauge: ${value}`);
+            container.innerHTML = "<div style='color: red;'>N/A</div>";
+            return;
+        }
+
         container.innerHTML = `
             <div style="position: relative; width: 100px; height: 50px;">
                 <svg viewBox="0 0 100 50" style="width: 100%; height: 100%;">
@@ -31,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
         createGauge("moistureGauge", sensorData.soil_moisture);
     }
 
-    
     function fetchData() {
         fetch("/get-data")
             .then(response => response.json())
@@ -41,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("lightData").textContent = data.sensor_data.light + " lx";
                 document.getElementById("moistureData").textContent = data.sensor_data.soil_moisture + " %";
 
-                // buttonStates = data.button_states || {}; // Store button states
+                buttonStates = data.button_states || {}; // Store button states
 
                 appendSensorLog(data.sensor_data);
                 updateGauges(data.sensor_data); // Update gauges with sensor data
