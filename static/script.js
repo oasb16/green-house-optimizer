@@ -65,9 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Validate the value
         if (isNaN(value) || value === null || value === undefined) {
             console.error(`Invalid value for gauge: ${value}`);
+            value = 1;
         }
 
-        value = 1;
         container.innerHTML = `
             <div style="position: relative; width: 100px; height: 50px;">
                 <svg viewBox="0 0 100 50" style="width: 100%; height: 100%;">
